@@ -57,7 +57,7 @@ export default function ResumeContent() {
       <motion.div variants={fadeInUp} className="text-center md:text-left space-y-2">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
           My{' '}
-          <span className="bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent text-glow-dual">
+          <span className="bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent text-glow-dual">
             Resume
           </span>
         </h1>
@@ -93,14 +93,14 @@ export default function ResumeContent() {
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
               <span className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
             </div>
-            <span className="text-[10px] text-slate-500 font-mono">alex-rivera ~ bio.sh</span>
+            <span className="text-[10px] text-slate-500 font-mono">Prazz ~ bio.sh</span>
             <div className="w-6" /> {/* Spacer */}
           </div>
           
           {/* Terminal Body */}
           <div className="flex-1 p-5 font-mono text-xs md:text-sm text-slate-400 space-y-4 bg-slate-950/30">
             <div>
-              <span className="text-neon-blue">&gt;</span> <span className="text-slate-100">cat developer_profile.json</span>
+              <span className="text-neon-blue">&gt;</span> <span className="text-slate-100">developer_profile.json</span>
             </div>
             <div className="text-slate-300 pl-4 space-y-1">
               <p>&#123;</p>

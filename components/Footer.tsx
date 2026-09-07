@@ -37,11 +37,14 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo & Tagline */}
           <div className="text-center md:text-left">
-            <span className="font-mono text-sm font-semibold tracking-wide bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
-              alex.rivera()
+            <span className="font-mono text-sm font-semibold tracking-wide bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+              Prazz()
             </span>
             <p className="text-xs text-slate-500 mt-1 font-mono">
               Crafting experiences at the intersection of design and code.
+            </p>
+            <p className="text-xs text-slate-500">
+              &copy; {new Date().getFullYear()} Prazz. All rights reserved.
             </p>
           </div>
 
@@ -63,15 +66,6 @@ export default function Footer() {
               );
             })}
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-900/50 mt-6 pt-6 text-center sm:text-left">
-          <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} Alex Rivera. All rights reserved.
-          </p>
-          <p className="text-xs text-slate-600 font-mono">
-            Built with Next.js v16 &bull; Tailwind CSS v4 &bull; Framer Motion
-          </p>
         </div>
       </div>
     </footer>

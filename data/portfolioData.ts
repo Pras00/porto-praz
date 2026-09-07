@@ -37,11 +37,13 @@ export const developerInfo = {
   name: "Prazz",
   title: "Creative Web Developer",
   tagline: "Crafting Modern Web Experiences",
-  subTagline: "Building high-performance, visually stunning, and highly interactive interfaces using Next.js, TypeScript, and modern design principles.",
-  about: "I am a passionate Web Developer with a strong focus on frontend experiences, clean code architectures, and modern web aesthetics. I bridge the gap between complex engineering and elegant design to build products that feel intuitive and responsive. When I'm not coding, I'm exploring new animation techniques, designing interactive prototypes, or optimizing application performance.",
+  subTagline:
+    "Building high-performance, visually stunning, and highly interactive interfaces using Next.js, TypeScript, and modern design principles.",
+  about:
+    "Informatics graduate with hands-on experience in front-end development through MSIB programs and software engineering projects. Proficient in building responsive web interfaces using HTML, CSS, JavaScript, React.js, Next.js, and Tailwind CSS. Experienced in translating design concepts into functional landing pages, collaborating with Digital Marketing teams, and applying basic SEO practices. Currently seeking a Web Developer Internship to contribute to the development of user-centered web products.",
   email: "prasetiawahyu22@gmail.com",
-  github: "https://github.com",
-  linkedin: "https://linkedin.com",
+  github: "https://github.com/Pras00",
+  linkedin: "https://www.linkedin.com/in/prasetia-wahyu-ramadhan-188919220/",
   twitter: "https://twitter.com",
 };
 
@@ -72,56 +74,36 @@ export const skills: Skill[] = [
 export const experiences: Experience[] = [
   {
     id: "exp-1",
-    role: "Senior Frontend Engineer",
-    company: "CyberSpace Labs",
-    period: "2024 - Present",
+    role: "Front-End Developer",
+    company: "PT Arkatama Multi Solusindo",
+    period: "Feb 2024 - Jun 2024",
     description: [
-      "Architected and developed next-generation Web3 analytics dashboards using Next.js (App Router) and Tailwind CSS.",
-      "Optimized client-side navigation and rendering performance, resulting in a 45% increase in Core Web Vitals scores.",
-      "Established standard reusable UI component library integrated with Framer Motion animations across 4 engineering teams.",
-      "Mentored junior developers and introduced modern testing practices using Jest and React Testing Library."
-    ]
+      "Developed and implemented six responsive web pages using HTML, CSS, and JavaScript.",
+      "Translated design concepts into landing pages, hero sections, JV pages, and download pages.",
+      "Contributed to the development of web pages for the Lead Magnet, FitMeal E-book, and Spookids projects.",
+      "Collaborated with the Digital Marketing team to deliver functional, engaging, and user-focused websites.",
+      "Applied basic SEO practices to the structure and content of web pages."
+    ],
   },
-  {
-    id: "exp-2",
-    role: "Full-Stack Developer",
-    company: "NexaCore Solutions",
-    period: "2022 - 2024",
-    description: [
-      "Built and scaled multi-tenant SaaS applications, integrating Stripe payment gateway and authentication flows.",
-      "Designed robust backend APIs in Node.js/TypeScript using NestJS and Prisma, handling 50k+ daily active requests.",
-      "Migrated legacy monolithic systems to modular serverless APIs deployed on AWS and Vercel.",
-      "Collaborated closely with designers to implement custom tailwind-based interactive dashboards."
-    ]
-  },
-  {
-    id: "exp-3",
-    role: "Web Developer Intern",
-    company: "Vertex Digital Agency",
-    period: "2021 - 2022",
-    description: [
-      "Developed SEO-optimized marketing sites and high-converting landing pages for various international clients.",
-      "Translated complex static design mockups from Figma into pixel-perfect responsive HTML, CSS, and React code.",
-      "Maintained and updated customer portals, resolving UI/UX bugs and browser compatibility issues."
-    ]
-  }
 ];
 
 export const educationList: Education[] = [
   {
     id: "edu-1",
-    degree: "Bachelor of Science in Computer Science",
-    school: "State University",
-    period: "2018 - 2022",
-    description: "Specialized in Software Engineering and Human-Computer Interaction. Graduated with Honors (GPA 3.85/4.00)."
+    degree: "Sarjana Komputer (S.Kom)",
+    school: "Universitas Jember",
+    period: "2021 - 2026",
+    description:
+      "Specialized in Software Engineering and Human-Computer Interaction. Graduated with Honors (GPA 3.85/4.00).",
   },
   {
     id: "edu-2",
-    degree: "Full-Stack Web Development Immersion",
-    school: "Tech Academy Bootcamp",
-    period: "2022",
-    description: "An intensive 6-month developer training program focused on JavaScript, React, Node.js, databases, and system design."
-  }
+    degree: "MSIB Data & Software Engineering ",
+    school: "PT Revolusi Cita Edukasi (RevoU)",
+    period: "Aug 2023 - Dec 2023",
+    description:
+      "An intensive 6-month developer training program focused on JavaScript, React, Node.js, databases, and system design.",
+  },
 ];
 
 export const projects: Project[] = [
