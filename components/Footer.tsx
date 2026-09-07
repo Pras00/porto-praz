@@ -3,6 +3,7 @@
 import React from 'react';
 import { Mail } from 'lucide-react';
 import { developerInfo } from '../data/portfolioData';
+import Logo from './Logo';
 
 // Custom SVG Brand Icons since Lucide v0.400+ removed them
 const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -36,11 +37,14 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo & Tagline */}
-          <div className="text-center md:text-left">
-            <span className="font-mono text-sm font-semibold tracking-wide bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
-              Prazz()
-            </span>
-            <p className="text-xs text-slate-600 dark:text-slate-500 mt-1 font-mono">
+          <div className="text-center md:text-left flex flex-col items-center md:items-start">
+            <div className="flex items-center gap-2">
+              <Logo size={24} showBadge={true} interactive={false} />
+              <span className="font-mono text-sm font-semibold tracking-wide bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+                Prazz()
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-500 mt-1.5 font-mono">
               Crafting experiences at the intersection of design and code.
             </p>
             <p className="text-xs text-slate-500 dark:text-slate-500">

@@ -1,0 +1,95 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="prazz-logo-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="prazz-logo-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <linearGradient id="prazz-logo-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#8b5cf6" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0.8" />
+    </linearGradient>
+    <linearGradient id="prazz-logo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1527" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#050811" stop-opacity="0.98" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Badge Container -->
+  <rect
+    x="3"
+    y="3"
+    width="94"
+    height="94"
+    rx="24"
+    fill="url(#prazz-logo-bg)"
+    stroke="url(#prazz-logo-border)"
+    stroke-width="3"
+  />
+
+  <!-- Core Prazz Monogram: Letter 'P' Interlocked with '< / >' Code Symbols -->
+  <g id="prazz-monogram">
+    <!-- Left Bracket < -->
+    <path
+      d="M 34 22 L 18 39 L 34 56"
+      stroke="url(#prazz-logo-cyan)"
+      stroke-width="8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Vertical Stem of P -->
+    <path
+      d="M 18 39 L 18 78"
+      stroke="url(#prazz-logo-cyan)"
+      stroke-width="8"
+      stroke-linecap="round"
+    />
+
+    <!-- Top Bar connecting to Right Bracket -->
+    <path
+      d="M 34 22 L 58 22"
+      stroke="url(#prazz-logo-cyan)"
+      stroke-width="8"
+      stroke-linecap="round"
+    />
+
+    <!-- Right Bracket > completing the Loop of P -->
+    <path
+      d="M 58 22 L 82 39 L 58 56"
+      stroke="url(#prazz-logo-purple)"
+      stroke-width="8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Bottom Loop Return Bar -->
+    <path
+      d="M 58 56 L 34 56"
+      stroke="url(#prazz-logo-purple)"
+      stroke-width="8"
+      stroke-linecap="round"
+    />
+
+    <!-- Center Code Slash / -->
+    <path
+      d="M 42 50 L 50 28"
+      stroke="#00f2fe"
+      stroke-width="5.5"
+      stroke-linecap="round"
+    />
+
+    <!-- Terminal Pulse Line & Dot Accent -->
+    <path
+      d="M 52 74 L 62 74"
+      stroke="#a855f7"
+      stroke-width="3.5"
+      stroke-linecap="round"
+    />
+    <circle cx="70" cy="74" r="3.5" fill="#a855f7" />
+  </g>
+</svg>

@@ -22,8 +22,10 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Prazz | Creative Web Developer & Next.js Specialist",
-  description: "Explore the professional Web Developer Portfolio of Alex Rivera. A Frontend Developer specializing in high-performance Next.js apps, TypeScript, and interactive Tailwind CSS designs.",
+  description: "Explore the professional Web Developer Portfolio of Prazz (Prasetia Wahyu Ramadhan). A Creative Web Developer specializing in high-performance Next.js apps, TypeScript, and interactive Tailwind CSS designs.",
   keywords: [
+    "Prazz Developer",
+    "Prasetia Wahyu Ramadhan",
     "Web Developer Portfolio",
     "Next.js Developer",
     "Frontend Developer",
@@ -33,6 +35,14 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Prasetia Wahyu Ramadhan" }],
   creator: "Prasetia Wahyu Ramadhan",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

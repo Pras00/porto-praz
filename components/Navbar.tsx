@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Terminal } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import Logo from './Logo';
 
 const navItems = [
   { name: 'Home', path: '/' },
@@ -44,11 +45,9 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo / Title */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-neon-blue/30 group-hover:border-neon-blue transition-colors duration-300">
-              <Terminal className="w-5 h-5 text-neon-blue group-hover:text-neon-blue-light transition-colors duration-300 text-glow-blue" />
-            </div>
-            <span className="font-mono text-lg font-bold tracking-tight bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent group-hover:brightness-110 transition-all duration-300">
+          <Link href="/" className="flex items-center gap-2.5 group focus:outline-none">
+            <Logo size={34} showBadge={true} interactive={true} />
+            <span className="font-mono text-lg font-bold tracking-tight bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent group-hover:brightness-110 transition-all duration-300">
               Prazz()
             </span>
           </Link>
