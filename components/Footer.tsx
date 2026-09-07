@@ -32,7 +32,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full border-t border-slate-900 bg-navy-dark/80 backdrop-blur-md py-8 mt-auto">
+    <footer className="w-full border-t border-slate-200 dark:border-slate-900 bg-white/80 dark:bg-navy-dark/80 backdrop-blur-md py-8 mt-auto">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo & Tagline */}
@@ -40,10 +40,10 @@ export default function Footer() {
             <span className="font-mono text-sm font-semibold tracking-wide bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
               Prazz()
             </span>
-            <p className="text-xs text-slate-500 mt-1 font-mono">
+            <p className="text-xs text-slate-600 dark:text-slate-500 mt-1 font-mono">
               Crafting experiences at the intersection of design and code.
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-500">
               &copy; {new Date().getFullYear()} Prazz. All rights reserved.
             </p>
           </div>
@@ -58,7 +58,7 @@ export default function Footer() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg border border-slate-800 bg-slate-900/30 text-slate-400 hover:text-neon-blue hover:border-neon-blue/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.25)] transition-all duration-300"
+                  className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/30 text-slate-600 dark:text-slate-400 hover:text-neon-blue hover:border-neon-blue/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.25)] transition-all duration-300"
                   aria-label={social.name}
                 >
                   <Icon className="w-5 h-5" />

@@ -25,26 +25,26 @@ export default function ProjectsContent() {
       {/* Header Info */}
       <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6">
         <div className="text-center md:text-left space-y-2">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             My Creative{' '}
-            <span className="bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent text-glow-dual">
+            <span className="bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent text-glow-dual">
               Projects
             </span>
           </h1>
-          <p className="text-slate-400 text-sm md:text-base max-w-md">
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-md">
             {"A curated selection of applications I've built, ranging from frontend tools to backend configurations."}
           </p>
         </div>
 
         {/* Counter Tag */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-slate-400">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-600 dark:text-slate-400">
           <FolderGit2 className="w-3.5 h-3.5" />
           <span>Showing {filteredProjects.length} Projects</span>
         </div>
       </div>
 
       {/* Category Selection Filter Bar */}
-      <div className="flex flex-wrap justify-center md:justify-start gap-2 border-b border-slate-900/60 pb-6">
+      <div className="flex flex-wrap justify-center md:justify-start gap-2 border-b border-slate-200 dark:border-slate-900/60 pb-6">
         {categories.map((category) => {
           const isActive = activeCategory === category.id;
           return (
@@ -53,8 +53,8 @@ export default function ProjectsContent() {
               onClick={() => setActiveCategory(category.id)}
               className={`relative px-4 py-2 text-xs font-mono font-semibold rounded-lg border transition-all duration-300 ${
                 isActive
-                  ? 'border-neon-blue/40 text-neon-blue-light shadow-[0_0_12px_rgba(59,130,246,0.15)] bg-neon-blue/10'
-                  : 'border-slate-800/80 text-slate-400 hover:text-slate-200 hover:border-slate-700 bg-slate-950/20'
+                  ? 'border-neon-blue/40 text-neon-blue dark:text-neon-blue-light shadow-[0_0_12px_rgba(59,130,246,0.15)] bg-neon-blue/10'
+                  : 'border-slate-200 dark:border-slate-800/80 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-950/20'
               }`}
             >
               {category.name}

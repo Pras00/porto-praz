@@ -60,21 +60,21 @@ export default function ContactContent() {
       value: developerInfo.email,
       href: `mailto:${developerInfo.email}`,
       icon: Mail,
-      accent: 'text-blue-400 border-blue-500/20 bg-blue-950/20 hover:border-blue-500/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]',
+      accent: 'text-blue-600 dark:text-blue-400 border-blue-500/20 bg-blue-500/10 dark:bg-blue-950/20 hover:border-blue-500/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)]',
     },
     {
       name: 'GitHub Profile',
-      value: 'github.com/alexrivera',
+      value: 'https://github.com/Pras00',
       href: developerInfo.github,
       icon: GithubIcon,
-      accent: 'text-purple-400 border-purple-500/20 bg-purple-950/20 hover:border-purple-500/40 hover:shadow-[0_0_15px_rgba(139,92,246,0.2)]',
+      accent: 'text-purple-600 dark:text-purple-400 border-purple-500/20 bg-purple-500/10 dark:bg-purple-950/20 hover:border-purple-500/40 hover:shadow-[0_0_15px_rgba(139,92,246,0.2)]',
     },
     {
       name: 'LinkedIn Network',
-      value: 'linkedin.com/in/alexrivera',
+      value: 'https://www.linkedin.com/in/prasetia-wahyu-ramadhan-188919220/',
       href: developerInfo.linkedin,
       icon: LinkedinIcon,
-      accent: 'text-emerald-400 border-emerald-500/20 bg-emerald-950/20 hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]',
+      accent: 'text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/10 dark:bg-emerald-950/20 hover:border-emerald-500/40 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]',
     },
   ];
 
@@ -87,13 +87,13 @@ export default function ContactContent() {
     >
       {/* Page Header */}
       <motion.div variants={fadeInUp} className="text-center md:text-left space-y-2">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
           {"Let's "}{' '}
-          <span className="bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent text-glow-dual">
+          <span className="bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent text-glow-dual">
             Connect
           </span>
         </h1>
-        <p className="text-slate-400 text-sm md:text-base max-w-lg">
+        <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-lg">
           Got a project in mind, want to collaborate, or just say hello? Drop a message below!
         </p>
       </motion.div>
@@ -102,7 +102,7 @@ export default function ContactContent() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
         {/* Left Hand: Contact Information Cards */}
         <motion.div variants={fadeInUp} className="lg:col-span-2 space-y-4">
-          <h2 className="text-lg font-bold font-mono tracking-wider text-slate-400 uppercase border-b border-slate-900 pb-2 mb-6">
+          <h2 className="text-lg font-bold font-mono tracking-wider text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-900 pb-2 mb-6">
             Contact Details
           </h2>
 
@@ -117,14 +117,14 @@ export default function ContactContent() {
                   rel="noopener noreferrer"
                   className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 ${info.accent}`}
                 >
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                  <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                     <Icon className="w-5 h-5 shrink-0" />
                   </div>
                   <div className="overflow-hidden">
                     <span className="block text-[10px] font-mono text-slate-500 uppercase tracking-wider">
                       {info.name}
                     </span>
-                    <span className="block text-sm font-semibold truncate text-slate-200 mt-0.5">
+                    <span className="block text-sm font-semibold truncate text-slate-800 dark:text-slate-200 mt-0.5">
                       {info.value}
                     </span>
                   </div>
@@ -133,8 +133,8 @@ export default function ContactContent() {
             })}
           </div>
 
-          <div className="glass-panel rounded-2xl p-5 border border-slate-900 bg-slate-950/20 text-xs text-slate-500 leading-relaxed font-mono">
-            <span className="text-neon-blue-light font-bold block mb-2">{"// WORKING HOURS"}</span>
+          <div className="glass-panel rounded-2xl p-5 border border-slate-200 dark:border-slate-900 bg-white/50 dark:bg-slate-950/20 text-xs text-slate-600 dark:text-slate-500 leading-relaxed font-mono">
+            <span className="text-neon-blue dark:text-neon-blue-light font-bold block mb-2">{"// WORKING HOURS"}</span>
             <p>Monday - Friday: 09:00 - 18:00 (GMT+7)</p>
             <p className="mt-1">Response time: Typically within 24 hours</p>
           </div>
@@ -142,7 +142,7 @@ export default function ContactContent() {
 
         {/* Right Hand: Contact Form */}
         <motion.div variants={fadeInUp} className="lg:col-span-3">
-          <h2 className="text-lg font-bold font-mono tracking-wider text-slate-400 uppercase border-b border-slate-900 pb-2 mb-6">
+          <h2 className="text-lg font-bold font-mono tracking-wider text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-900 pb-2 mb-6">
             Send Message
           </h2>
 
@@ -160,8 +160,8 @@ export default function ContactContent() {
                   className="flex flex-col items-center justify-center py-12 text-center"
                 >
                   <CheckCircle2 className="w-16 h-16 text-emerald-400 drop-shadow-[0_0_15px_rgba(16,185,129,0.3)] mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-2">Message Sent Successfully!</h3>
-                  <p className="text-slate-400 text-sm max-w-sm leading-relaxed mb-8">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Message Sent Successfully!</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm max-w-sm leading-relaxed mb-8">
                     Thank you for reaching out. Your message has been received. I will get back to you shortly!
                   </p>
                   <button
@@ -183,7 +183,7 @@ export default function ContactContent() {
                 >
                   {/* Name field */}
                   <div className="space-y-2">
-                    <label htmlFor="name" className="block text-xs font-mono font-bold text-slate-400 uppercase tracking-wide">
+                    <label htmlFor="name" className="block text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                       Your Name
                     </label>
                     <input
@@ -192,11 +192,11 @@ export default function ContactContent() {
                       value={name}
                       disabled={status === 'submitting'}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. John Doe"
-                      className={`w-full px-4 py-3 rounded-lg bg-slate-950/60 border text-slate-200 text-sm font-sans focus:outline-none transition-all duration-300 placeholder:text-slate-600 ${
+                      placeholder="Your name"
+                      className={`w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-950/60 border text-slate-900 dark:text-slate-200 text-sm font-sans focus:outline-none transition-all duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-600 ${
                         errors.name
                           ? 'border-red-500/50 focus:border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-                          : 'border-slate-800 focus:border-neon-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.25)]'
+                          : 'border-slate-300 dark:border-slate-800 focus:border-neon-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.25)]'
                       }`}
                     />
                     {errors.name && (
@@ -209,7 +209,7 @@ export default function ContactContent() {
 
                   {/* Email field */}
                   <div className="space-y-2">
-                    <label htmlFor="email" className="block text-xs font-mono font-bold text-slate-400 uppercase tracking-wide">
+                    <label htmlFor="email" className="block text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                       Email Address
                     </label>
                     <input
@@ -218,11 +218,11 @@ export default function ContactContent() {
                       value={email}
                       disabled={status === 'submitting'}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. john@example.com"
-                      className={`w-full px-4 py-3 rounded-lg bg-slate-950/60 border text-slate-200 text-sm font-sans focus:outline-none transition-all duration-300 placeholder:text-slate-600 ${
+                      placeholder="email@example.com"
+                      className={`w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-950/60 border text-slate-900 dark:text-slate-200 text-sm font-sans focus:outline-none transition-all duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-600 ${
                         errors.email
                           ? 'border-red-500/50 focus:border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-                          : 'border-slate-800 focus:border-neon-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.25)]'
+                          : 'border-slate-300 dark:border-slate-800 focus:border-neon-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.25)]'
                       }`}
                     />
                     {errors.email && (
@@ -235,7 +235,7 @@ export default function ContactContent() {
 
                   {/* Message field */}
                   <div className="space-y-2">
-                    <label htmlFor="message" className="block text-xs font-mono font-bold text-slate-400 uppercase tracking-wide">
+                    <label htmlFor="message" className="block text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                       Your Message
                     </label>
                     <textarea
@@ -245,10 +245,10 @@ export default function ContactContent() {
                       disabled={status === 'submitting'}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder="Describe your project, ideas, or questions here..."
-                      className={`w-full px-4 py-3 rounded-lg bg-slate-950/60 border text-slate-200 text-sm font-sans focus:outline-none transition-all duration-300 placeholder:text-slate-600 resize-none ${
+                      className={`w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-950/60 border text-slate-900 dark:text-slate-200 text-sm font-sans focus:outline-none transition-all duration-300 placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none ${
                         errors.message
                           ? 'border-red-500/50 focus:border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-                          : 'border-slate-800 focus:border-neon-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.25)]'
+                          : 'border-slate-300 dark:border-slate-800 focus:border-neon-blue focus:shadow-[0_0_15px_rgba(59,130,246,0.25)]'
                       }`}
                     />
                     {errors.message && (
@@ -274,7 +274,7 @@ export default function ContactContent() {
                     className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-mono font-semibold text-white transition-all duration-300 cursor-pointer ${
                       status === 'submitting'
                         ? 'bg-slate-800 border border-slate-700 text-slate-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] hover:scale-[1.01]'
+                        : 'bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] hover:scale-[1.01]'
                     }`}
                   >
                     {status === 'submitting' ? (

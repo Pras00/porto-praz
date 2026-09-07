@@ -24,7 +24,7 @@ export interface Education {
   degree: string;
   school: string;
   period: string;
-  description: string;
+  description: string[];
 }
 
 export interface Skill {
@@ -90,19 +90,28 @@ export const experiences: Experience[] = [
 export const educationList: Education[] = [
   {
     id: "edu-1",
-    degree: "Sarjana Komputer (S.Kom)",
+    degree: "Bachelor of Informatics",
     school: "Universitas Jember",
     period: "2021 - 2026",
-    description:
-      "Specialized in Software Engineering and Human-Computer Interaction. Graduated with Honors (GPA 3.85/4.00).",
+    description: [
+      "Completed a Bachelor’s degree in Informatics with a focus on software development and web technologies.",
+      "Participated in HMIF committee activities and competitions in Web Development, UI/UX Design, and scientific writing.",
+      "Strengthened collaboration, problem-solving, communication, and technical skills through academic projects and organizational activities.",
+      "Specialized in Software Engineering and Human-Computer Interaction.",
+      "Graduated with Honors (GPA 3.85/4.00).",
+    ],
   },
   {
     id: "edu-2",
-    degree: "MSIB Data & Software Engineering ",
+    degree: "MSIB Data & Software Engineering",
     school: "PT Revolusi Cita Edukasi (RevoU)",
     period: "Aug 2023 - Dec 2023",
-    description:
-      "An intensive 6-month developer training program focused on JavaScript, React, Node.js, databases, and system design.",
+    description: [
+      "Applied Python, MySQL, exploratory data analysis, HTML, CSS, JavaScript, Node.js, REST API, and Prisma ORM through a capstone project.",
+      "Collaborated with a five-person team to plan, develop, and present the capstone project.",
+      "Achieved 1st place among 30 teams in a Data Analyst and Software Engineering project competition.",
+      "Participated in Career Development activities to strengthen professional and career-readiness skills.",
+    ],
   },
 ];
 

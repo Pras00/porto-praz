@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Terminal } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const navItems = [
   { name: 'Home', path: '/' },
@@ -36,7 +37,7 @@ export default function Navbar() {
     <header
       className={`sticky top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-navy-dark/80 border-b border-neon-blue/20 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
+          ? 'bg-white/80 dark:bg-[#090d16]/80 border-b border-slate-200 dark:border-neon-blue/20 backdrop-blur-md shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
           : 'bg-transparent border-b border-transparent'
       }`}
     >
@@ -44,7 +45,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo / Title */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="p-1.5 rounded-lg bg-navy-dark border border-neon-blue/30 group-hover:border-neon-blue transition-colors duration-300">
+            <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-neon-blue/30 group-hover:border-neon-blue transition-colors duration-300">
               <Terminal className="w-5 h-5 text-neon-blue group-hover:text-neon-blue-light transition-colors duration-300 text-glow-blue" />
             </div>
             <span className="font-mono text-lg font-bold tracking-tight bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent group-hover:brightness-110 transition-all duration-300">
@@ -53,7 +54,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.path;
               return (
@@ -62,8 +63,8 @@ export default function Navbar() {
                   href={item.path}
                   className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-lg ${
                     isActive
-                      ? 'text-neon-blue-light text-glow-blue'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'text-neon-blue dark:text-neon-blue-light font-semibold text-glow-blue'
+                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                   }`}
                 >
                   <span className="relative z-10">{item.name}</span>
@@ -78,19 +79,24 @@ export default function Navbar() {
               );
             })}
             
+            <div className="pl-1">
+              <ThemeToggle />
+            </div>
+
             <Link
               href="/contact"
-              className="ml-4 px-4 py-2 text-xs font-mono font-semibold text-neon-blue border border-neon-blue/40 rounded-lg hover:bg-neon-blue/10 hover:border-neon-blue hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300"
+              className="ml-2 px-4 py-2 text-xs font-mono font-semibold text-neon-blue border border-neon-blue/40 rounded-lg hover:bg-neon-blue/10 hover:border-neon-blue hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300"
             >
               {"Let's Connect"}
             </Link>
           </nav>
 
           {/* Mobile Navigation Toggle */}
-          <div className="flex md:hidden">
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-900 focus:outline-none transition-colors duration-300"
+              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 focus:outline-none transition-colors duration-300 cursor-pointer"
               aria-label="Toggle Menu"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -107,7 +113,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden border-b border-neon-blue/20 bg-navy-dark/95 backdrop-blur-lg overflow-hidden"
+            className="md:hidden border-b border-slate-200 dark:border-neon-blue/20 bg-white/95 dark:bg-[#090d16]/95 backdrop-blur-lg overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-2">
               {navItems.map((item) => {
@@ -119,8 +125,8 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                     className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
                       isActive
-                        ? 'bg-neon-blue/10 border-l-2 border-neon-blue text-neon-blue-light text-glow-blue'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                        ? 'bg-neon-blue/10 border-l-2 border-neon-blue text-neon-blue dark:text-neon-blue-light font-semibold text-glow-blue'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/50'
                     }`}
                   >
                     {item.name}

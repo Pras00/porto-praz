@@ -51,7 +51,7 @@ export default function Home() {
           {/* Heading Name */}
           <motion.h1
             variants={itemVariants}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-4"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4"
           >
             {"Hi, I'm "}{' '}
             <span className="bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(139,92,246,0.15)]">
@@ -62,7 +62,7 @@ export default function Home() {
           {/* Professional Tagline */}
           <motion.h2
             variants={itemVariants}
-            className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-300 mb-6 font-sans tracking-wide text-glow-dual"
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-700 dark:text-slate-300 mb-6 font-sans tracking-wide text-glow-dual"
           >
             {developerInfo.tagline}
           </motion.h2>
@@ -70,7 +70,7 @@ export default function Home() {
           {/* Subtagline / Brief Bio */}
           <motion.p
             variants={itemVariants}
-            className="text-slate-400 text-sm sm:text-base md:text-lg max-w-lg leading-relaxed mb-8"
+            className="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-lg leading-relaxed mb-8"
           >
             {developerInfo.subTagline}
           </motion.p>
@@ -90,7 +90,7 @@ export default function Home() {
             </Link>
             <Link
               href="/contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-mono font-semibold text-slate-300 hover:text-white bg-slate-900/40 hover:bg-slate-900 border border-slate-800 hover:border-neon-blue/40 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-mono font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white bg-white/80 hover:bg-white dark:bg-slate-900/40 dark:hover:bg-slate-900 border border-slate-300 dark:border-slate-800 hover:border-neon-blue/40 shadow-sm dark:shadow-none rounded-xl transition-all duration-300 hover:scale-[1.02]"
             >
               Contact Me
             </Link>
@@ -99,20 +99,20 @@ export default function Home() {
           {/* Micro Stat Dashboard Info */}
           <motion.div
             variants={itemVariants}
-            className="mt-12 flex items-center justify-center lg:justify-start gap-6 border-t border-slate-900 pt-6 w-full max-w-md"
+            className="mt-12 flex items-center justify-center lg:justify-start gap-6 border-t border-slate-200 dark:border-slate-900 pt-6 w-full max-w-md"
           >
             <div className="flex flex-col items-center lg:items-start">
-              <span className="text-xl font-bold font-mono text-neon-blue-light text-glow-blue">3+</span>
+              <span className="text-xl font-bold font-mono text-neon-blue dark:text-neon-blue-light text-glow-blue">3+</span>
               <span className="text-xs text-slate-500 font-mono mt-0.5">Years Experience</span>
             </div>
-            <div className="w-px h-8 bg-slate-800" />
+            <div className="w-px h-8 bg-slate-200 dark:bg-slate-800" />
             <div className="flex flex-col items-center lg:items-start">
-              <span className="text-xl font-bold font-mono text-neon-purple-light text-glow-purple">15+</span>
+              <span className="text-xl font-bold font-mono text-neon-purple dark:text-neon-purple-light text-glow-purple">15+</span>
               <span className="text-xs text-slate-500 font-mono mt-0.5">Completed Projects</span>
             </div>
-            <div className="w-px h-8 bg-slate-800" />
+            <div className="w-px h-8 bg-slate-200 dark:bg-slate-800" />
             <div className="flex flex-col items-center lg:items-start">
-              <span className="text-xl font-bold font-mono text-emerald-400">100%</span>
+              <span className="text-xl font-bold font-mono text-emerald-500 dark:text-emerald-400">100%</span>
               <span className="text-xs text-slate-500 font-mono mt-0.5">Client Satisfaction</span>
             </div>
           </motion.div>
@@ -141,7 +141,7 @@ export default function Home() {
             <div className="glow-rotate-border rounded-full" />
             
             {/* Inner background box */}
-            <div className="relative w-full h-full rounded-full bg-[#0a0f1d] flex items-center justify-center overflow-hidden z-10">
+            <div className="relative w-full h-full rounded-full bg-slate-100 dark:bg-[#0a0f1d] flex items-center justify-center overflow-hidden z-10">
               <Image
                 src="/prass.png"
                 alt={developerInfo.name}

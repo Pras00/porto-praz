@@ -74,14 +74,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
       {/* Card Info Content */}
       <div className="p-5 md:p-6 flex flex-col flex-1">
-        <h3 className="text-lg font-bold text-white group-hover:text-neon-blue-light transition-colors duration-300 flex items-center justify-between">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-neon-blue dark:group-hover:text-neon-blue-light transition-colors duration-300 flex items-center justify-between">
           {project.title}
-          <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-slate-900/60 border border-slate-800 text-slate-400 uppercase">
+          <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 uppercase">
             {project.category}
           </span>
         </h3>
         
-        <p className="text-slate-400 text-sm mt-3 leading-relaxed flex-1">
+        <p className="text-slate-600 dark:text-slate-400 text-sm mt-3 leading-relaxed flex-1">
           {project.description}
         </p>
 
@@ -90,7 +90,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="text-[10px] font-mono bg-slate-900/40 border border-slate-800 text-slate-400 px-2 py-1 rounded"
+              className="text-[10px] font-mono bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 px-2 py-1 rounded"
             >
               {tech}
             </span>
@@ -98,12 +98,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         {/* Action button triggers */}
-        <div className="flex items-center gap-3 mt-6 pt-5 border-t border-slate-900/50">
+        <div className="flex items-center gap-3 mt-6 pt-5 border-t border-slate-200 dark:border-slate-900/50">
           <a
             href={project.demoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-mono font-semibold bg-neon-blue/15 hover:bg-neon-blue/25 text-neon-blue-light border border-neon-blue/30 hover:border-neon-blue/50 rounded-lg hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-all duration-300"
+            className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-mono font-semibold bg-neon-blue/10 dark:bg-neon-blue/15 hover:bg-neon-blue/20 dark:hover:bg-neon-blue/25 text-neon-blue dark:text-neon-blue-light border border-neon-blue/30 hover:border-neon-blue/50 rounded-lg hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-all duration-300"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             Live Demo
@@ -112,7 +112,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-mono font-semibold bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 rounded-lg transition-all duration-300"
+            className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-mono font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/60 dark:hover:bg-slate-900 text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 rounded-lg transition-all duration-300"
           >
             <GithubIcon className="w-3.5 h-3.5" />
             Source Code

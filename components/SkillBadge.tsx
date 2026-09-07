@@ -15,26 +15,26 @@ export default function SkillBadge({ name, category }: SkillBadgeProps) {
     switch (category) {
       case 'frontend':
         return {
-          bg: 'bg-blue-950/40 hover:bg-blue-950/60',
-          border: 'border-blue-500/20 hover:border-blue-500/50',
-          text: 'text-blue-400',
+          bg: 'bg-blue-500/10 hover:bg-blue-500/15 dark:bg-blue-950/40 dark:hover:bg-blue-950/60',
+          border: 'border-blue-500/25 hover:border-blue-500/50',
+          text: 'text-blue-600 dark:text-blue-400',
           glow: 'hover:shadow-[0_0_15px_rgba(59,130,246,0.35)]',
           icon: Layout,
         };
       case 'backend':
         return {
-          bg: 'bg-purple-950/40 hover:bg-purple-950/60',
-          border: 'border-purple-500/20 hover:border-purple-500/50',
-          text: 'text-purple-400',
+          bg: 'bg-purple-500/10 hover:bg-purple-500/15 dark:bg-purple-950/40 dark:hover:bg-purple-950/60',
+          border: 'border-purple-500/25 hover:border-purple-500/50',
+          text: 'text-purple-600 dark:text-purple-400',
           glow: 'hover:shadow-[0_0_15px_rgba(139,92,246,0.35)]',
           icon: Cpu,
         };
       case 'tools':
       default:
         return {
-          bg: 'bg-emerald-950/40 hover:bg-emerald-950/60',
-          border: 'border-emerald-500/20 hover:border-emerald-500/50',
-          text: 'text-emerald-400',
+          bg: 'bg-emerald-500/10 hover:bg-emerald-500/15 dark:bg-emerald-950/40 dark:hover:bg-emerald-950/60',
+          border: 'border-emerald-500/25 hover:border-emerald-500/50',
+          text: 'text-emerald-600 dark:text-emerald-400',
           glow: 'hover:shadow-[0_0_15px_rgba(16,185,129,0.35)]',
           icon: Settings,
         };
