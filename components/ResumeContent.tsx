@@ -104,7 +104,7 @@ export default function ResumeContent() {
             </div>
             <div className="text-slate-300 pl-4 space-y-1">
               <p>&#123;</p>
-              <p className="pl-4">{"\"name\":"} <span className="text-neon-purple-light">{"\""}{developerInfo.name}{"\""}</span>,</p>
+              <p className="pl-4">{"\"name\":"} <span className="text-neon-purple-light">{"\""}{"Prasetia Wahyu Ramadhan"}{"\""}</span>,</p>
               <p className="pl-4">{"\"role\":"} <span className="text-neon-purple-light">{"\"Full Stack Web Developer\""}</span>,</p>
               <p className="pl-4">{"\"stack\":"} [<span className="text-emerald-400">{"\"Next.js\""}</span>, <span className="text-emerald-400">{"\"TypeScript\""}</span>, <span className="text-emerald-400">{"\"TailwindCSS\""}</span>],</p>
               <p className="pl-4">{"\"philosophy\":"} <span className="text-neon-blue-light">{"\"Design with passion, write clean, robust logic.\""}</span></p>

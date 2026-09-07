@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Alex Rivera | Creative Web Developer & Next.js Specialist",
+  title: "Prazz | Creative Web Developer & Next.js Specialist",
   description: "Explore the professional Web Developer Portfolio of Alex Rivera. A Frontend Developer specializing in high-performance Next.js apps, TypeScript, and interactive Tailwind CSS designs.",
   keywords: [
     "Web Developer Portfolio",
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     "React Engineer",
     "Tailwind CSS v4"
   ],
-  authors: [{ name: "Alex Rivera" }],
-  creator: "Alex Rivera",
+  authors: [{ name: "Prasetia Wahyu Ramadhan" }],
+  creator: "Prasetia Wahyu Ramadhan",
 };
 
 export default function RootLayout({

@@ -66,7 +66,7 @@ export default function Timeline({ items, type }: TimelineProps) {
             {/* Header info */}
             <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
               <div>
-                <h3 className="text-base md:text-lg font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 group-hover:bg-clip-text transition-colors">
+                <h3 className="text-base md:text-lg font-bold text-white group-hover:text-transparent group-hover:bg-linear-to-r group-hover:from-white group-hover:to-slate-300 group-hover:bg-clip-text transition-colors">
                   {item.title}
                 </h3>
                 <p className={`text-sm font-semibold flex items-center gap-1.5 mt-0.5 ${
