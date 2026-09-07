@@ -1,65 +1,159 @@
-import Image from "next/image";
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion, Variants } from 'framer-motion';
+import { ArrowRight, Code2, Sparkles } from 'lucide-react';
+import { developerInfo } from '@/data/portfolioData';
+
+// Stagger variant configuration for entry animations
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 15 },
+  },
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex-1 flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] py-12 md:py-20">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="w-full flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-8"
+      >
+        {/* Intro Text Section */}
+        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+          {/* Accent Label */}
+          <motion.div
+            variants={itemVariants}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neon-blue/10 border border-neon-blue/30 text-xs font-mono font-bold text-neon-blue-light tracking-wide uppercase mb-6 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Available for Hire</span>
+          </motion.div>
+
+          {/* Heading Name */}
+          <motion.h1
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-4"
           >
-            Documentation
-          </a>
+            {"Hi, I'm "}{' '}
+            <span className="bg-linear-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(139,92,246,0.15)]">
+              {developerInfo.name}
+            </span>
+          </motion.h1>
+
+          {/* Professional Tagline */}
+          <motion.h2
+            variants={itemVariants}
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-300 mb-6 font-sans tracking-wide text-glow-dual"
+          >
+            {developerInfo.tagline}
+          </motion.h2>
+
+          {/* Subtagline / Brief Bio */}
+          <motion.p
+            variants={itemVariants}
+            className="text-slate-400 text-sm sm:text-base md:text-lg max-w-lg leading-relaxed mb-8"
+          >
+            {developerInfo.subTagline}
+          </motion.p>
+
+          {/* Action CTAs */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+          >
+            <Link
+              href="/projects"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-mono font-semibold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 rounded-xl glow-dual-hover shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] transition-all duration-300 hover:scale-[1.02]"
+            >
+              <Code2 className="w-4 h-4" />
+              View Projects
+              <ArrowRight className="w-4 h-4 ml-0.5" />
+            </Link>
+            <Link
+              href="/contact"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-mono font-semibold text-slate-300 hover:text-white bg-slate-900/40 hover:bg-slate-900 border border-slate-800 hover:border-neon-blue/40 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+            >
+              Contact Me
+            </Link>
+          </motion.div>
+
+          {/* Micro Stat Dashboard Info */}
+          <motion.div
+            variants={itemVariants}
+            className="mt-12 flex items-center justify-center lg:justify-start gap-6 border-t border-slate-900 pt-6 w-full max-w-md"
+          >
+            <div className="flex flex-col items-center lg:items-start">
+              <span className="text-xl font-bold font-mono text-neon-blue-light text-glow-blue">3+</span>
+              <span className="text-xs text-slate-500 font-mono mt-0.5">Years Experience</span>
+            </div>
+            <div className="w-px h-8 bg-slate-800" />
+            <div className="flex flex-col items-center lg:items-start">
+              <span className="text-xl font-bold font-mono text-neon-purple-light text-glow-purple">15+</span>
+              <span className="text-xs text-slate-500 font-mono mt-0.5">Completed Projects</span>
+            </div>
+            <div className="w-px h-8 bg-slate-800" />
+            <div className="flex flex-col items-center lg:items-start">
+              <span className="text-xl font-bold font-mono text-emerald-400">100%</span>
+              <span className="text-xs text-slate-500 font-mono mt-0.5">Client Satisfaction</span>
+            </div>
+          </motion.div>
         </div>
-      </main>
+
+        {/* Profile Image with Rotating Neon Gradient Border */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 80, damping: 18, delay: 0.2 }}
+          className="flex-1 flex justify-center items-center"
+        >
+          {/* Subtle floating animation wrapper */}
+          <motion.div
+            animate={{
+              y: [0, -12, 0],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-full glow-rotate-wrapper p-1 glow-dual transition-all duration-300"
+          >
+            {/* Spinning gradient border overlay */}
+            <div className="glow-rotate-border rounded-full" />
+            
+            {/* Inner background box */}
+            <div className="relative w-full h-full rounded-full bg-[#0a0f1d] flex items-center justify-center overflow-hidden z-10">
+              <Image
+                src="/prass.png"
+                alt={developerInfo.name}
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 256px, 320px"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
