@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Lock,
@@ -25,6 +25,7 @@ import {
   Save,
   Star,
   Camera,
+  X,
 } from 'lucide-react';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 import { Project, Experience, Education, Skill, DeveloperInfo } from '@/types/portfolio';
@@ -377,6 +378,21 @@ export default function StudioContent() {
     level: 85,
     category: 'frontend',
   });
+
+  // Close any open modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (confirmDialog.isOpen) setConfirmDialog((prev) => ({ ...prev, isOpen: false }));
+        else if (isProjectModalOpen) setIsProjectModalOpen(false);
+        else if (isExpModalOpen) setIsExpModalOpen(false);
+        else if (isEduModalOpen) setIsEduModalOpen(false);
+        else if (isSkillModalOpen) setIsSkillModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [confirmDialog.isOpen, isProjectModalOpen, isExpModalOpen, isEduModalOpen, isSkillModalOpen]);
 
   // -------------------------------------------------------------
   // CRUD Handlers
@@ -1232,19 +1248,35 @@ export default function StudioContent() {
       {/* 1. PROJECT MODAL */}
       <AnimatePresence>
         {isProjectModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div
+            onClick={() => setIsProjectModalOpen(false)}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ duration: 0.18 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-panel rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl max-h-[88vh] flex flex-col overflow-hidden bg-white dark:bg-slate-950"
             >
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
-                {editingProject ? 'Edit Project' : 'Add New Project'}
-              </h3>
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 shrink-0">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                  {editingProject ? 'Edit Project' : 'Add New Project'}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsProjectModalOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Tutup"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-              <form onSubmit={handleSaveProject} className="space-y-4 overflow-y-auto pr-1 flex-1">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSaveProject} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
                       Project Title *
@@ -1550,96 +1582,129 @@ export default function StudioContent() {
                     />
                   </div>
                 </div>
+              </div>
 
-                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setIsProjectModalOpen(false)}
-                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-center"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer shadow-md text-center"
-                  >
-                    Save Project
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
+              {/* Pinned Footer */}
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-950/70">
+                <button
+                  type="button"
+                  onClick={() => setIsProjectModalOpen(false)}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-center"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer shadow-md text-center"
+                >
+                  Save Project
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
         )}
       </AnimatePresence>
 
       {/* 2. EXPERIENCE MODAL */}
       <AnimatePresence>
         {isExpModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div
+            onClick={() => setIsExpModalOpen(false)}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ duration: 0.18 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-panel rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl max-h-[88vh] flex flex-col overflow-hidden bg-white dark:bg-slate-950"
             >
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
-                {editingExp ? 'Edit Experience' : 'Add Experience'}
-              </h3>
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 shrink-0">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                  {editingExp ? 'Edit Experience' : 'Add Experience'}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsExpModalOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Tutup"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-              <form onSubmit={handleSaveExp} className="space-y-4 overflow-y-auto pr-1 flex-1">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Role / Position *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={expForm.role || ''}
-                    onChange={(e) => setExpForm({ ...expForm, role: e.target.value })}
-                    placeholder="e.g. Front-End Developer"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Company / Organization *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={expForm.company || ''}
-                    onChange={(e) => setExpForm({ ...expForm, company: e.target.value })}
-                    placeholder="e.g. PT Arkatama Multi Solusindo"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Period
-                  </label>
-                  <input
-                    type="text"
-                    value={expForm.period || ''}
-                    onChange={(e) => setExpForm({ ...expForm, period: e.target.value })}
-                    placeholder="e.g. Feb 2024 - Jun 2024"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Key Responsibilities / Bullets
-                  </label>
-                  <div className="flex gap-2">
+              <form onSubmit={handleSaveExp} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Role / Position *
+                    </label>
                     <input
                       type="text"
-                      value={expBulletInput}
-                      onChange={(e) => setExpBulletInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
+                      required
+                      value={expForm.role || ''}
+                      onChange={(e) => setExpForm({ ...expForm, role: e.target.value })}
+                      placeholder="e.g. Front-End Developer"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Company / Organization *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={expForm.company || ''}
+                      onChange={(e) => setExpForm({ ...expForm, company: e.target.value })}
+                      placeholder="e.g. PT Arkatama Multi Solusindo"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Period
+                    </label>
+                    <input
+                      type="text"
+                      value={expForm.period || ''}
+                      onChange={(e) => setExpForm({ ...expForm, period: e.target.value })}
+                      placeholder="e.g. Feb 2024 - Jun 2024"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Key Responsibilities / Bullets
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={expBulletInput}
+                        onChange={(e) => setExpBulletInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (expBulletInput.trim()) {
+                              setExpForm({
+                                ...expForm,
+                                description: [...(expForm.description || []), expBulletInput.trim()],
+                              });
+                              setExpBulletInput('');
+                            }
+                          }
+                        }}
+                        placeholder="Tambahkan poin tanggung jawab..."
+                        className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
                           if (expBulletInput.trim()) {
                             setExpForm({
                               ...expForm,
@@ -1647,52 +1712,39 @@ export default function StudioContent() {
                             });
                             setExpBulletInput('');
                           }
-                        }
-                      }}
-                      placeholder="Tambahkan poin tanggung jawab..."
-                      className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (expBulletInput.trim()) {
-                          setExpForm({
-                            ...expForm,
-                            description: [...(expForm.description || []), expBulletInput.trim()],
-                          });
-                          setExpBulletInput('');
-                        }
-                      }}
-                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <ul className="space-y-1.5 mt-2">
-                    {(expForm.description || []).map((b, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-start justify-between gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 text-xs"
+                        }}
+                        className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
                       >
-                        <span className="flex-1">{b}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setExpForm({
-                              ...expForm,
-                              description: expForm.description?.filter((_, i) => i !== idx),
-                            })
-                          }
-                          className="text-slate-400 hover:text-red-400 cursor-pointer"
+                        Add
+                      </button>
+                    </div>
+                    <ul className="space-y-1.5 mt-2">
+                      {(expForm.description || []).map((b, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-start justify-between gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 text-xs"
                         >
-                          ×
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                          <span className="flex-1">{b}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setExpForm({
+                                ...expForm,
+                                description: expForm.description?.filter((_, i) => i !== idx),
+                              })
+                            }
+                            className="text-slate-400 hover:text-red-400 cursor-pointer"
+                          >
+                            ×
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
-                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
+                {/* Pinned Footer */}
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-950/70">
                   <button
                     type="button"
                     onClick={() => setIsExpModalOpen(false)}
@@ -1716,112 +1768,130 @@ export default function StudioContent() {
       {/* 3. EDUCATION MODAL */}
       <AnimatePresence>
         {isEduModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div
+            onClick={() => setIsEduModalOpen(false)}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ duration: 0.18 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-panel rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl max-h-[88vh] flex flex-col overflow-hidden bg-white dark:bg-slate-950"
             >
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
-                {editingEdu ? 'Edit Education' : 'Add Education'}
-              </h3>
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 shrink-0">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                  {editingEdu ? 'Edit Education' : 'Add Education'}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsEduModalOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Tutup"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-              <form onSubmit={handleSaveEdu} className="space-y-4 overflow-y-auto pr-1 flex-1">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Degree / Program *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={eduForm.degree || ''}
-                    onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })}
-                    placeholder="e.g. Bachelor of Informatics"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    School / University *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={eduForm.school || ''}
-                    onChange={(e) => setEduForm({ ...eduForm, school: e.target.value })}
-                    placeholder="e.g. Universitas Jember"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Period
-                  </label>
-                  <input
-                    type="text"
-                    value={eduForm.period || ''}
-                    onChange={(e) => setEduForm({ ...eduForm, period: e.target.value })}
-                    placeholder="e.g. 2021 - 2026"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Achievements / Description Bullets
-                  </label>
-                  <div className="flex gap-2">
+              <form onSubmit={handleSaveEdu} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Degree / Program *
+                    </label>
                     <input
                       type="text"
-                      value={eduBulletInput}
-                      onChange={(e) => setEduBulletInput(e.target.value)}
-                      placeholder="Tambahkan poin pencapaian..."
-                      className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      required
+                      value={eduForm.degree || ''}
+                      onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })}
+                      placeholder="e.g. Bachelor of Informatics"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                     />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (eduBulletInput.trim()) {
-                          setEduForm({
-                            ...eduForm,
-                            description: [...(eduForm.description || []), eduBulletInput.trim()],
-                          });
-                          setEduBulletInput('');
-                        }
-                      }}
-                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
-                    >
-                      Add
-                    </button>
                   </div>
-                  <ul className="space-y-1.5 mt-2">
-                    {(eduForm.description || []).map((b, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-start justify-between gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 text-xs"
-                      >
-                        <span className="flex-1">{b}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      School / University *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={eduForm.school || ''}
+                      onChange={(e) => setEduForm({ ...eduForm, school: e.target.value })}
+                      placeholder="e.g. Universitas Jember"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Period
+                    </label>
+                    <input
+                      type="text"
+                      value={eduForm.period || ''}
+                      onChange={(e) => setEduForm({ ...eduForm, period: e.target.value })}
+                      placeholder="e.g. 2021 - 2026"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Achievements / Description Bullets
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={eduBulletInput}
+                        onChange={(e) => setEduBulletInput(e.target.value)}
+                        placeholder="Tambahkan poin pencapaian..."
+                        className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (eduBulletInput.trim()) {
                             setEduForm({
                               ...eduForm,
-                              description: eduForm.description?.filter((_, i) => i !== idx),
-                            })
+                              description: [...(eduForm.description || []), eduBulletInput.trim()],
+                            });
+                            setEduBulletInput('');
                           }
-                          className="text-slate-400 hover:text-red-400 cursor-pointer"
+                        }}
+                        className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    <ul className="space-y-1.5 mt-2">
+                      {(eduForm.description || []).map((b, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-start justify-between gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 text-xs"
                         >
-                          ×
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                          <span className="flex-1">{b}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEduForm({
+                                ...eduForm,
+                                description: eduForm.description?.filter((_, i) => i !== idx),
+                              })
+                            }
+                            className="text-slate-400 hover:text-red-400 cursor-pointer"
+                          >
+                            ×
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
-                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
+                {/* Pinned Footer */}
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-950/70">
                   <button
                     type="button"
                     onClick={() => setIsEduModalOpen(false)}
@@ -1845,74 +1915,92 @@ export default function StudioContent() {
       {/* 4. SKILL MODAL */}
       <AnimatePresence>
         {isSkillModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div
+            onClick={() => setIsSkillModalOpen(false)}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ duration: 0.18 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-panel rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl max-h-[88vh] flex flex-col overflow-hidden bg-white dark:bg-slate-950"
             >
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
-                Add / Update Skill
-              </h3>
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 shrink-0">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+                  Add / Update Skill
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsSkillModalOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Tutup"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-              <form onSubmit={handleSaveSkill} className="space-y-4 overflow-y-auto pr-1 flex-1">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Skill Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={skillForm.name}
-                    onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
-                    placeholder="e.g. Next.js, Docker, Python"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                    Category
-                  </label>
-                  <select
-                    value={skillForm.category}
-                    onChange={(e) =>
-                      setSkillForm({
-                        ...skillForm,
-                        category: e.target.value as 'frontend' | 'backend' | 'tools',
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
-                  >
-                    <option value="frontend">Frontend</option>
-                    <option value="backend">Backend</option>
-                    <option value="tools">Tools</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="flex justify-between">
+              <form onSubmit={handleSaveSkill} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1 min-h-0">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
-                      Proficiency Level
+                      Skill Name *
                     </label>
-                    <span className="text-xs font-mono text-neon-blue font-bold">
-                      {skillForm.level}%
-                    </span>
+                    <input
+                      type="text"
+                      required
+                      value={skillForm.name}
+                      onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
+                      placeholder="e.g. Next.js, Docker, Python"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    />
                   </div>
-                  <input
-                    type="range"
-                    min={10}
-                    max={100}
-                    value={skillForm.level}
-                    onChange={(e) =>
-                      setSkillForm({ ...skillForm, level: parseInt(e.target.value, 10) })
-                    }
-                    className="w-full accent-neon-blue cursor-pointer"
-                  />
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                      Category
+                    </label>
+                    <select
+                      value={skillForm.category}
+                      onChange={(e) =>
+                        setSkillForm({
+                          ...skillForm,
+                          category: e.target.value as 'frontend' | 'backend' | 'tools',
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    >
+                      <option value="frontend">Frontend</option>
+                      <option value="backend">Backend</option>
+                      <option value="tools">Tools</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between">
+                      <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
+                        Proficiency Level
+                      </label>
+                      <span className="text-xs font-mono text-neon-blue font-bold">
+                        {skillForm.level}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={10}
+                      max={100}
+                      value={skillForm.level}
+                      onChange={(e) =>
+                        setSkillForm({ ...skillForm, level: parseInt(e.target.value, 10) })
+                      }
+                      className="w-full accent-neon-blue cursor-pointer"
+                    />
+                  </div>
                 </div>
 
-                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
+                {/* Pinned Footer */}
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-950/70">
                   <button
                     type="button"
                     onClick={() => setIsSkillModalOpen(false)}
@@ -1936,11 +2024,15 @@ export default function StudioContent() {
       {/* 5. CUSTOM CONFIRMATION DIALOG (No native browser alert/confirm) */}
       <AnimatePresence>
         {confirmDialog.isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md">
+          <div
+            onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              onClick={(e) => e.stopPropagation()}
               className="p-5 sm:p-6 rounded-2xl max-w-md w-full bg-white/95 dark:bg-slate-950/90 border border-red-500/30 dark:border-red-500/20 shadow-2xl backdrop-blur-md relative overflow-hidden"
             >
               <div className="flex items-start gap-3.5 sm:gap-4">
@@ -1955,6 +2047,14 @@ export default function StudioContent() {
                     {confirmDialog.message}
                   </p>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer -mr-1 -mt-1"
+                  title="Tutup"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
 
               <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80">

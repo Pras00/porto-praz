@@ -92,7 +92,7 @@ export default function RootLayout({
           <Navbar />
 
           {/* Dynamic page content wrapper */}
-          <main className="flex-1 flex flex-col relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+          <main className="flex-1 flex flex-col relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
             {children}
           </main>
 
