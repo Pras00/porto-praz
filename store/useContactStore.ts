@@ -14,6 +14,7 @@ interface ContactState {
   message: string;
   status: FormStatus;
   errors: FormErrors;
+  errorMessage?: string;
   
   setName: (name: string) => void;
   setEmail: (email: string) => void;
@@ -29,19 +30,26 @@ export const useContactStore = create<ContactState>((set, get) => ({
   message: '',
   status: 'idle',
   errors: {},
+  errorMessage: undefined,
 
   setName: (name) => set((state) => ({ 
     name, 
+    status: state.status === 'error' ? 'idle' : state.status,
+    errorMessage: undefined,
     errors: { ...state.errors, name: undefined } 
   })),
 
   setEmail: (email) => set((state) => ({ 
     email, 
+    status: state.status === 'error' ? 'idle' : state.status,
+    errorMessage: undefined,
     errors: { ...state.errors, email: undefined } 
   })),
 
   setMessage: (message) => set((state) => ({ 
     message, 
+    status: state.status === 'error' ? 'idle' : state.status,
+    errorMessage: undefined,
     errors: { ...state.errors, message: undefined } 
   })),
 
@@ -50,7 +58,8 @@ export const useContactStore = create<ContactState>((set, get) => ({
     email: '',
     message: '',
     status: 'idle',
-    errors: {}
+    errors: {},
+    errorMessage: undefined,
   }),
 
   validateForm: () => {
@@ -85,23 +94,57 @@ export const useContactStore = create<ContactState>((set, get) => ({
   },
 
   submitForm: async (onSubmitSuccess) => {
-    const { validateForm } = get();
+    const { validateForm, name, email, message } = get();
     
     if (!validateForm()) {
       return;
     }
 
-    set({ status: 'submitting' });
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey || accessKey.trim() === '' || accessKey === 'your_web3forms_access_key_here') {
+      set({
+        status: 'error',
+        errorMessage: 'Web3Forms Access Key belum dikonfigurasi di file .env.local',
+      });
+      return;
+    }
+
+    set({ status: 'submitting', errorMessage: undefined });
 
     try {
-      // Simulate API call to send message
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      set({ status: 'success' });
-      if (onSubmitSuccess) onSubmitSuccess();
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey.trim(),
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+          from_name: `${name.trim()} (Portfolio)`,
+          subject: `New message from ${name.trim()} via Portfolio`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        set({ status: 'success', name: '', email: '', message: '', errorMessage: undefined });
+        if (onSubmitSuccess) onSubmitSuccess();
+      } else {
+        set({
+          status: 'error',
+          errorMessage: data.message || 'Gagal mengirim pesan. Silakan coba lagi nanti.',
+        });
+      }
     } catch (error) {
       console.error("Form submission error:", error);
-      set({ status: 'error' });
+      set({
+        status: 'error',
+        errorMessage: 'Terjadi gangguan jaringan saat mengirim pesan. Silakan coba lagi.',
+      });
     }
   }
 }));

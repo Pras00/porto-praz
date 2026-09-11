@@ -42,6 +42,7 @@ export default function ContactContent() {
     message,
     status,
     errors,
+    errorMessage,
     setName,
     setEmail,
     setMessage,
@@ -263,7 +264,7 @@ export default function ContactContent() {
                   {status === 'error' && (
                     <div className="p-3 rounded-lg border border-red-500/20 bg-red-950/20 text-red-400 text-xs font-mono flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>An error occurred while sending your message. Please try again.</span>
+                      <span>{errorMessage || "An error occurred while sending your message. Please try again."}</span>
                     </div>
                   )}
 

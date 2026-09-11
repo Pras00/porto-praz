@@ -49,7 +49,7 @@ export default function Timeline({ items, type }: TimelineProps) {
         <motion.div key={item.id} variants={itemVariants} className="relative group">
           {/* Glowing node point on the timeline line */}
           <div className="absolute -left-7.75 md:-left-9.75 top-1.5 flex items-center justify-center">
-            <div className={`w-4 h-4 rounded-full border-2 bg-white dark:bg-[#090d16] transition-all duration-300 group-hover:scale-125 ${
+            <div className={`w-4 h-4 rounded-full border-2 bg-white dark:bg-navy-dark transition-all duration-300 group-hover:scale-125 ${
               isExperience 
                 ? 'border-blue-500 group-hover:bg-blue-500 group-hover:shadow-[0_0_12px_#3b82f6]' 
                 : 'border-purple-500 group-hover:bg-purple-500 group-hover:shadow-[0_0_12px_#8b5cf6]'
