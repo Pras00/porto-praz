@@ -38,8 +38,8 @@ export default function Navbar() {
     <header
       className={`sticky top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/80 dark:bg-[#090d16]/80 border-b border-slate-200 dark:border-neon-blue/20 backdrop-blur-md shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
-          : 'bg-transparent border-b border-transparent'
+          ? 'bg-white/95 dark:bg-[#090d16]/90 border-b border-slate-200 dark:border-neon-blue/20 backdrop-blur-md shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
+          : 'bg-white/90 dark:bg-[#090d16]/80 border-b border-slate-200/80 dark:border-slate-800/40 backdrop-blur-md'
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,7 +63,7 @@ export default function Navbar() {
                   className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-lg ${
                     isActive
                       ? 'text-neon-blue dark:text-neon-blue-light font-semibold text-glow-blue'
-                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                      : 'text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white'
                   }`}
                 >
                   <span className="relative z-10">{item.name}</span>
@@ -125,7 +125,7 @@ export default function Navbar() {
                     className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
                       isActive
                         ? 'bg-neon-blue/10 border-l-2 border-neon-blue text-neon-blue dark:text-neon-blue-light font-semibold text-glow-blue'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/50'
+                        : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-900/50'
                     }`}
                   >
                     {item.name}

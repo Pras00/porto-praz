@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FolderGit2 } from 'lucide-react';
-import { projects } from '@/data/portfolioData';
+import { usePortfolioStore } from '@/store/usePortfolioStore';
 import ProjectCard from './ProjectCard';
 
 const categories = [
@@ -15,6 +15,7 @@ const categories = [
 
 export default function ProjectsContent() {
   const [activeCategory, setActiveCategory] = useState('all');
+  const projects = usePortfolioStore((state) => state.projects);
 
   const filteredProjects = activeCategory === 'all'
     ? projects

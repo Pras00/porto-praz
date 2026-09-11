@@ -1,13 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PortfolioSync from "@/components/PortfolioSync";
 import { ThemeProvider } from "@/context/ThemeContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -54,7 +56,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <head>
         <script
@@ -76,6 +78,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 selection:bg-neon-blue/35 selection:text-white transition-colors duration-300">
         <ThemeProvider>
+          {/* Background data synchronizer */}
+          <PortfolioSync />
+
           {/* Ambient background designs */}
           <div className="fixed inset-0 grid-overlay -z-20 pointer-events-none" />
           

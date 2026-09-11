@@ -33,7 +33,19 @@ export interface Skill {
   category: 'frontend' | 'backend' | 'tools';
 }
 
-export const developerInfo = {
+export interface DeveloperInfo {
+  name: string;
+  title: string;
+  tagline: string;
+  subTagline: string;
+  about: string;
+  email: string;
+  github: string;
+  linkedin: string;
+  twitter: string;
+}
+
+export const developerInfo: DeveloperInfo = {
   name: "Prazz",
   title: "Creative Web Developer",
   tagline: "Crafting Modern Web Experiences",

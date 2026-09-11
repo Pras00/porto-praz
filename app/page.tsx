@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 import { ArrowRight, Code2, Sparkles } from 'lucide-react';
-import { developerInfo } from '@/data/portfolioData';
+import { usePortfolioStore } from '@/store/usePortfolioStore';
 
 // Stagger variant configuration for entry animations
 const containerVariants: Variants = {
@@ -29,6 +29,7 @@ const itemVariants: Variants = {
 };
 
 export default function Home() {
+  const developerInfo = usePortfolioStore((state) => state.developerInfo);
   return (
     <div className="flex-1 flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] py-12 md:py-20">
       <motion.div

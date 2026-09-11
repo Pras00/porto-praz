@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Mail, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
-import { developerInfo } from '@/data/portfolioData';
+import { usePortfolioStore } from '@/store/usePortfolioStore';
 import { useContactStore } from '@/store/useContactStore';
 
 // Custom SVG Icons because Lucide v0.400+ removed them
@@ -49,6 +49,8 @@ export default function ContactContent() {
     submitForm,
     resetForm,
   } = useContactStore();
+
+  const developerInfo = usePortfolioStore((state) => state.developerInfo);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();

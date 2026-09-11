@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { User, Briefcase, GraduationCap, Code2 } from 'lucide-react';
-import { developerInfo, skills, experiences, educationList } from '@/data/portfolioData';
+import { usePortfolioStore } from '@/store/usePortfolioStore';
 import SkillBadge from './SkillBadge';
 import Timeline from './Timeline';
 
@@ -24,6 +24,8 @@ const staggerContainer: Variants = {
 };
 
 export default function ResumeContent() {
+  const { developerInfo, skills, experiences, educationList } = usePortfolioStore();
+
   // Group skills by category
   const frontendSkills = skills.filter((s) => s.category === 'frontend');
   const backendSkills = skills.filter((s) => s.category === 'backend');

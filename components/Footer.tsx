@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Mail } from 'lucide-react';
-import { developerInfo } from '../data/portfolioData';
+import { usePortfolioStore } from '@/store/usePortfolioStore';
 import Logo from './Logo';
 
 // Custom SVG Brand Icons since Lucide v0.400+ removed them
@@ -25,6 +25,7 @@ const TwitterIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function Footer() {
+  const developerInfo = usePortfolioStore((state) => state.developerInfo);
   const socialLinks = [
     { name: 'GitHub', icon: GithubIcon, url: developerInfo.github },
     { name: 'LinkedIn', icon: LinkedinIcon, url: developerInfo.linkedin },
