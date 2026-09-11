@@ -2,15 +2,16 @@ import type { Metadata } from 'next';
 import ProjectsContent from '@/components/ProjectsContent';
 
 export const metadata: Metadata = {
-  title: "Projects Showcase | Alex Rivera | Next.js Developer Portfolio",
-  description: "Browse the developer project portfolio of Alex Rivera. Featuring full-stack web applications, frontend interactive dashboards, and backend microservices built in React and Node.js.",
+  title: "Projects Showcase | Prazz | Creative Web Developer",
+  description: "Explore the creative portfolio projects of Prazz (Prasetia Wahyu Ramadhan). Featuring responsive web applications, modern frontends, and dynamic dashboards built with Next.js, React, and TypeScript.",
   keywords: [
+    "Prazz Projects",
+    "Prasetia Wahyu Ramadhan Portfolio",
     "Web Developer Portfolio Projects",
     "Next.js Portfolio",
-    "React Projects Grid",
-    "Frontend Code Demos",
+    "React Projects Showcase",
+    "Frontend Projects",
     "TypeScript Projects",
-    "Developer Showcase"
   ],
 };
 

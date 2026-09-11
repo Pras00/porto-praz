@@ -24,9 +24,10 @@ import {
   LogOut,
   Save,
   Star,
+  Camera,
 } from 'lucide-react';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
-import { Project, Experience, Education, Skill, DeveloperInfo } from '@/data/portfolioData';
+import { Project, Experience, Education, Skill, DeveloperInfo } from '@/types/portfolio';
 
 // External store subscription for sessionStorage auth token
 const getAuthSnapshot = () => {
@@ -65,16 +66,16 @@ function ProfileTabForm({ initialData, onSave, showToast }: ProfileTabFormProps)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="w-full glass-panel p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <User className="w-5 h-5 text-neon-blue" />
           Developer Profile Information
         </h2>
         <button
           type="submit"
           disabled={isSaving}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer disabled:opacity-50"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           {isSaving ? 'Menyimpan...' : 'Save Profile'}
@@ -286,6 +287,64 @@ export default function StudioContent() {
     featured: false,
   });
   const [techInput, setTechInput] = useState('');
+  const [imageUploadMode, setImageUploadMode] = useState<'upload' | 'url'>('upload');
+  const [isCompressingImage, setIsCompressingImage] = useState(false);
+
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 8 * 1024 * 1024) {
+      showToast('Ukuran file maksimal 8MB', 'error');
+      return;
+    }
+
+    setIsCompressingImage(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = Math.round(width);
+        canvas.height = Math.round(height);
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL('image/webp', 0.85);
+          setProjectForm((prev) => ({ ...prev, image: dataUrl }));
+          showToast('Screenshot berhasil diproses!');
+        }
+        setIsCompressingImage(false);
+      };
+      img.onerror = () => {
+        setIsCompressingImage(false);
+        showToast('Gagal memproses file gambar', 'error');
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = () => {
+      setIsCompressingImage(false);
+      showToast('Gagal membaca file gambar', 'error');
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Experience Modal State
   const [isExpModalOpen, setIsExpModalOpen] = useState(false);
@@ -326,6 +385,9 @@ export default function StudioContent() {
     if (proj) {
       setEditingProject(proj);
       setProjectForm(proj);
+      setImageUploadMode(
+        proj.image && proj.image.startsWith('http') ? 'url' : 'upload'
+      );
     } else {
       setEditingProject(null);
       setProjectForm({
@@ -335,11 +397,12 @@ export default function StudioContent() {
         longDescription: '',
         technologies: ['React', 'Next.js', 'Tailwind CSS'],
         category: 'frontend',
-        image: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+        image: '',
         demoUrl: '',
         githubUrl: '',
         featured: false,
       });
+      setImageUploadMode('upload');
     }
     setTechInput('');
     setIsProjectModalOpen(true);
@@ -641,7 +704,7 @@ export default function StudioContent() {
   // Render: Authenticated Studio Dashboard
   // -------------------------------------------------------------
   return (
-    <div className="space-y-8 py-6 md:py-10 max-w-6xl mx-auto">
+    <div className="w-full space-y-8 py-6 md:py-10">
       {/* Toast Alert */}
       <AnimatePresence>
         {toastMessage && (
@@ -666,13 +729,13 @@ export default function StudioContent() {
       </AnimatePresence>
 
       {/* Studio Header & Status Bar */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 rounded-2xl glass-panel border border-slate-200 dark:border-slate-800">
+      <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl glass-panel border border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Portfolio Studio
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-neon-purple/20 text-neon-purple border border-neon-purple/30">
+            <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-neon-purple/20 text-neon-purple border border-neon-purple/30">
               Admin Control
             </span>
           </div>
@@ -681,10 +744,10 @@ export default function StudioContent() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
           {/* Cloud sync status indicator */}
           <div
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg border text-[11px] sm:text-xs font-mono ${
               isConfigured
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
                 : 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'
@@ -693,40 +756,42 @@ export default function StudioContent() {
             {isConfigured ? (
               <>
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Supabase Cloud Active</span>
+                <span>Supabase Active</span>
               </>
             ) : (
               <>
                 <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>Local Fallback Mode</span>
+                <span>Local Fallback</span>
               </>
             )}
           </div>
 
-          <button
-            onClick={() => {
-              fetchData();
-              showToast('Data disinkronkan ulang!');
-            }}
-            disabled={isLoading}
-            className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-neon-blue/40 text-slate-600 dark:text-slate-400 hover:text-neon-blue transition-all"
-            title="Refresh Data"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                fetchData();
+                showToast('Data disinkronkan ulang!');
+              }}
+              disabled={isLoading}
+              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-neon-blue/40 text-slate-600 dark:text-slate-400 hover:text-neon-blue transition-all cursor-pointer"
+              title="Refresh Data"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
 
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 text-xs font-mono transition-all"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Lock</span>
-          </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 text-xs font-mono transition-all cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Lock</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-none">
+      <div className="w-full flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-none">
         {[
           { id: 'overview', label: 'Overview', icon: Sparkles },
           { id: 'profile', label: 'Profile', icon: User },
@@ -757,7 +822,7 @@ export default function StudioContent() {
 
       {/* Tab 1: OVERVIEW */}
       {activeTab === 'overview' && (
-        <div className="space-y-6">
+        <div className="w-full space-y-6">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="p-5 rounded-xl glass-panel border border-slate-200 dark:border-slate-800">
               <span className="text-xs font-mono text-slate-500 uppercase">Projects</span>
@@ -820,15 +885,20 @@ export default function StudioContent() {
 
       {/* Tab 3: PROJECTS */}
       {activeTab === 'projects' && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <FolderGit2 className="w-5 h-5 text-neon-blue" />
-              Manage Projects
-            </h2>
+        <div className="w-full space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <FolderGit2 className="w-5 h-5 text-neon-blue" />
+                Manage Projects
+              </h2>
+              <p className="text-xs text-slate-500">
+                Tambah, edit, atau hapus proyek dan screenshot portofolio Anda.
+              </p>
+            </div>
             <button
               onClick={() => openProjectModal()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Project
@@ -839,15 +909,33 @@ export default function StudioContent() {
             {projects.map((proj) => (
               <div
                 key={proj.id}
-                className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between gap-4"
+                className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between gap-4"
               >
                 <div>
+                  {/* Thumbnail Preview if available */}
+                  {proj.image &&
+                  (proj.image.startsWith('http') ||
+                    proj.image.startsWith('data:image') ||
+                    proj.image.startsWith('/')) ? (
+                    <div className="w-full h-36 rounded-xl overflow-hidden mb-3.5 border border-slate-200 dark:border-slate-800 bg-slate-950 relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={proj.image}
+                        alt={proj.title}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-950/80 backdrop-blur-md text-[10px] font-mono text-emerald-400 border border-emerald-500/20">
+                        Screenshot
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
                         {proj.category}
                       </span>
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white mt-2 flex items-center gap-2">
+                      <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1.5 flex items-center gap-1.5">
                         {proj.title}
                         {proj.featured && (
                           <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
@@ -857,14 +945,14 @@ export default function StudioContent() {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => openProjectModal(proj)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-neon-blue hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                        className="p-2 rounded-lg text-slate-400 hover:text-neon-blue hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                         title="Edit Project"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteProject(proj.id, proj.title)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                        className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                         title="Delete Project"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -894,15 +982,20 @@ export default function StudioContent() {
 
       {/* Tab 4: EXPERIENCE */}
       {activeTab === 'experience' && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-neon-purple" />
-              Work Experience
-            </h2>
+        <div className="w-full space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-neon-purple" />
+                Work Experience
+              </h2>
+              <p className="text-xs text-slate-500">
+                Kelola riwayat karir dan pengalaman profesional Anda.
+              </p>
+            </div>
             <button
               onClick={() => openExpModal()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Experience
@@ -913,10 +1006,10 @@ export default function StudioContent() {
             {experiences.map((exp) => (
               <div
                 key={exp.id}
-                className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-start justify-between gap-4"
+                className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-start justify-between gap-4"
               >
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">
                       {exp.role}
                     </h3>
@@ -934,16 +1027,16 @@ export default function StudioContent() {
                   </ul>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 self-end md:self-start">
                   <button
                     onClick={() => openExpModal(exp)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-neon-blue hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                    className="p-2 rounded-lg text-slate-400 hover:text-neon-blue hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                   >
                     <Edit3 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteExp(exp.id, exp.role, exp.company)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                    className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -956,15 +1049,20 @@ export default function StudioContent() {
 
       {/* Tab 5: EDUCATION */}
       {activeTab === 'education' && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-emerald-500" />
-              Education & Certifications
-            </h2>
+        <div className="w-full space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <GraduationCap className="w-5 h-5 text-emerald-500" />
+                Education & Certifications
+              </h2>
+              <p className="text-xs text-slate-500">
+                Kelola riwayat pendidikan formal dan sertifikasi keahlian.
+              </p>
+            </div>
             <button
               onClick={() => openEduModal()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Education
@@ -975,10 +1073,10 @@ export default function StudioContent() {
             {educationList.map((edu) => (
               <div
                 key={edu.id}
-                className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-start justify-between gap-4"
+                className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-start justify-between gap-4"
               >
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">
                       {edu.degree}
                     </h3>
@@ -996,16 +1094,16 @@ export default function StudioContent() {
                   </ul>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 self-end md:self-start">
                   <button
                     onClick={() => openEduModal(edu)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-neon-blue hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                    className="p-2 rounded-lg text-slate-400 hover:text-neon-blue hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                   >
                     <Edit3 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteEdu(edu.id, edu.degree, edu.school)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                    className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -1018,18 +1116,23 @@ export default function StudioContent() {
 
       {/* Tab 6: SKILLS */}
       {activeTab === 'skills' && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Database className="w-5 h-5 text-pink-500" />
-              Technical Skills
-            </h2>
+        <div className="w-full space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Database className="w-5 h-5 text-pink-500" />
+                Technical Skills
+              </h2>
+              <p className="text-xs text-slate-500">
+                Kelola daftar keahlian teknologi dan persentase kemahiran Anda.
+              </p>
+            </div>
             <button
               onClick={() => {
                 setSkillForm({ name: '', level: 85, category: 'frontend' });
                 setIsSkillModalOpen(true);
               }}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               Add Skill
@@ -1040,7 +1143,7 @@ export default function StudioContent() {
             {skills.map((s) => (
               <div
                 key={s.name}
-                className="glass-panel p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3"
+                className="glass-panel p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3"
               >
                 <div>
                   <span className="block text-sm font-semibold text-slate-900 dark:text-white">
@@ -1055,7 +1158,7 @@ export default function StudioContent() {
                 </div>
                 <button
                   onClick={() => handleDeleteSkill(s.name)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                  className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
                   title="Delete Skill"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -1068,7 +1171,7 @@ export default function StudioContent() {
 
       {/* Tab 7: BACKUP & RESTORE */}
       {activeTab === 'backup' && (
-        <div className="glass-panel p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+        <div className="w-full glass-panel p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Download className="w-5 h-5 text-neon-blue" />
@@ -1129,18 +1232,18 @@ export default function StudioContent() {
       {/* 1. PROJECT MODAL */}
       <AnimatePresence>
         {isProjectModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-6 md:p-8 rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 my-8 shadow-2xl"
+              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
             >
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
                 {editingProject ? 'Edit Project' : 'Add New Project'}
               </h3>
 
-              <form onSubmit={handleSaveProject} className="space-y-4">
+              <form onSubmit={handleSaveProject} className="space-y-4 overflow-y-auto pr-1 flex-1">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
@@ -1152,7 +1255,7 @@ export default function StudioContent() {
                       value={projectForm.title || ''}
                       onChange={(e) => setProjectForm({ ...projectForm, title: e.target.value })}
                       placeholder="e.g. Modern SaaS Platform"
-                      className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                     />
                   </div>
 
@@ -1168,7 +1271,7 @@ export default function StudioContent() {
                           category: e.target.value as 'frontend' | 'backend' | 'fullstack',
                         })
                       }
-                      className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                     >
                       <option value="frontend">Frontend</option>
                       <option value="backend">Backend</option>
@@ -1176,7 +1279,7 @@ export default function StudioContent() {
                     </select>
                   </div>
 
-                  <div className="space-y-1.5 flex items-center pt-6">
+                  <div className="space-y-1.5 flex items-center pt-2 sm:pt-6">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -1192,6 +1295,130 @@ export default function StudioContent() {
                     </label>
                   </div>
 
+                  {/* Screenshot Demo Image Section */}
+                  <div className="space-y-3 md:col-span-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 uppercase flex items-center gap-1.5">
+                          <Camera className="w-3.5 h-3.5 text-neon-blue" />
+                          Screenshot Demo Proyek
+                        </label>
+                        <p className="text-[11px] text-slate-500">
+                          Unggah screenshot demo atau tempel URL gambar langsung
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-lg self-start sm:self-auto">
+                        <button
+                          type="button"
+                          onClick={() => setImageUploadMode('upload')}
+                          className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-all cursor-pointer ${
+                            imageUploadMode === 'upload'
+                              ? 'bg-white dark:bg-slate-800 text-neon-blue shadow-xs font-bold'
+                              : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+                          }`}
+                        >
+                          Upload File
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setImageUploadMode('url')}
+                          className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-all cursor-pointer ${
+                            imageUploadMode === 'url'
+                              ? 'bg-white dark:bg-slate-800 text-neon-blue shadow-xs font-bold'
+                              : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+                          }`}
+                        >
+                          URL Gambar
+                        </button>
+                      </div>
+                    </div>
+
+                    {projectForm.image &&
+                    (projectForm.image.startsWith('http') ||
+                      projectForm.image.startsWith('data:image') ||
+                      projectForm.image.startsWith('/')) ? (
+                      <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 group">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={projectForm.image}
+                          alt="Screenshot Preview"
+                          className="w-full h-44 sm:h-52 object-cover object-top"
+                        />
+                        <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-wrap items-center justify-center gap-2.5 p-4 backdrop-blur-xs">
+                          <label className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800 text-xs font-mono font-bold text-slate-900 dark:text-white hover:brightness-110 cursor-pointer flex items-center gap-1.5 shadow-lg">
+                            <Upload className="w-3.5 h-3.5" />
+                            Ganti Gambar
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageFileUpload}
+                              className="hidden"
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setProjectForm({ ...projectForm, image: '' })}
+                            className="px-3 py-1.5 rounded-lg bg-red-600 text-xs font-mono font-bold text-white hover:bg-red-500 cursor-pointer flex items-center gap-1.5 shadow-lg"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Hapus Screenshot
+                          </button>
+                        </div>
+                        <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-md text-[10px] font-mono text-emerald-400 border border-emerald-500/30">
+                          ✓ Screenshot Demo Aktif
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        {imageUploadMode === 'upload' ? (
+                          <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-neon-blue/50 rounded-xl p-6 cursor-pointer bg-slate-50 dark:bg-slate-950/40 hover:bg-neon-blue/5 transition-all group">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageFileUpload}
+                              disabled={isCompressingImage}
+                              className="hidden"
+                            />
+                            {isCompressingImage ? (
+                              <div className="flex items-center gap-2 text-neon-blue text-xs font-mono">
+                                <RefreshCw className="w-4 h-4 animate-spin" />
+                                <span>Mengompresi dan memproses gambar...</span>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="p-3 rounded-full bg-neon-blue/10 text-neon-blue group-hover:scale-110 transition-transform mb-2">
+                                  <Upload className="w-5 h-5" />
+                                </div>
+                                <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 text-center">
+                                  Klik untuk unggah screenshot demo
+                                </span>
+                                <span className="text-[11px] text-slate-400 mt-0.5 text-center">
+                                  PNG, JPG, WebP (otomatis dioptimasi untuk web)
+                                </span>
+                              </>
+                            )}
+                          </label>
+                        ) : (
+                          <div className="space-y-1.5">
+                            <input
+                              type="text"
+                              value={projectForm.image || ''}
+                              onChange={(e) =>
+                                setProjectForm({ ...projectForm, image: e.target.value })
+                              }
+                              placeholder="https://... URL gambar screenshot langsung"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue font-mono"
+                            />
+                            <p className="text-[11px] text-slate-500">
+                              Bisa gunakan URL gambar publik dari GitHub raw, hosting gambar, Unsplash, dll.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="space-y-1.5 md:col-span-2">
                     <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
                       Short Description *
@@ -1204,7 +1431,7 @@ export default function StudioContent() {
                         setProjectForm({ ...projectForm, description: e.target.value })
                       }
                       placeholder="Brief overview of what this project does..."
-                      className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue resize-none"
                     />
                   </div>
 
@@ -1219,7 +1446,7 @@ export default function StudioContent() {
                         setProjectForm({ ...projectForm, longDescription: e.target.value })
                       }
                       placeholder="Extended details, technical highlights, etc."
-                      className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue resize-none"
                     />
                   </div>
 
@@ -1248,7 +1475,7 @@ export default function StudioContent() {
                           }
                         }}
                         placeholder="e.g. Next.js"
-                        className="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                        className="flex-1 px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                       />
                       <button
                         type="button"
@@ -1264,7 +1491,7 @@ export default function StudioContent() {
                             setTechInput('');
                           }
                         }}
-                        className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs"
+                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
                       >
                         Add
                       </button>
@@ -1284,7 +1511,7 @@ export default function StudioContent() {
                                 technologies: projectForm.technologies?.filter((_, i) => i !== idx),
                               })
                             }
-                            className="hover:text-red-400"
+                            className="hover:text-red-400 cursor-pointer"
                           >
                             ×
                           </button>
@@ -1304,7 +1531,7 @@ export default function StudioContent() {
                         setProjectForm({ ...projectForm, demoUrl: e.target.value })
                       }
                       placeholder="https://..."
-                      className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                     />
                   </div>
 
@@ -1319,22 +1546,22 @@ export default function StudioContent() {
                         setProjectForm({ ...projectForm, githubUrl: e.target.value })
                       }
                       placeholder="https://github.com/..."
-                      className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                     />
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
                   <button
                     type="button"
                     onClick={() => setIsProjectModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-center"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer shadow-md text-center"
                   >
                     Save Project
                   </button>
@@ -1348,18 +1575,18 @@ export default function StudioContent() {
       {/* 2. EXPERIENCE MODAL */}
       <AnimatePresence>
         {isExpModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-6 md:p-8 rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 my-8 shadow-2xl"
+              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
             >
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
                 {editingExp ? 'Edit Experience' : 'Add Experience'}
               </h3>
 
-              <form onSubmit={handleSaveExp} className="space-y-4">
+              <form onSubmit={handleSaveExp} className="space-y-4 overflow-y-auto pr-1 flex-1">
                 <div className="space-y-1.5">
                   <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
                     Role / Position *
@@ -1370,7 +1597,7 @@ export default function StudioContent() {
                     value={expForm.role || ''}
                     onChange={(e) => setExpForm({ ...expForm, role: e.target.value })}
                     placeholder="e.g. Front-End Developer"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1384,7 +1611,7 @@ export default function StudioContent() {
                     value={expForm.company || ''}
                     onChange={(e) => setExpForm({ ...expForm, company: e.target.value })}
                     placeholder="e.g. PT Arkatama Multi Solusindo"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1397,7 +1624,7 @@ export default function StudioContent() {
                     value={expForm.period || ''}
                     onChange={(e) => setExpForm({ ...expForm, period: e.target.value })}
                     placeholder="e.g. Feb 2024 - Jun 2024"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1436,7 +1663,7 @@ export default function StudioContent() {
                           setExpBulletInput('');
                         }
                       }}
-                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs"
+                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
                     >
                       Add
                     </button>
@@ -1456,7 +1683,7 @@ export default function StudioContent() {
                               description: expForm.description?.filter((_, i) => i !== idx),
                             })
                           }
-                          className="text-slate-400 hover:text-red-400"
+                          className="text-slate-400 hover:text-red-400 cursor-pointer"
                         >
                           ×
                         </button>
@@ -1465,17 +1692,17 @@ export default function StudioContent() {
                   </ul>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
                   <button
                     type="button"
                     onClick={() => setIsExpModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-center"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer shadow-md text-center"
                   >
                     Save
                   </button>
@@ -1489,18 +1716,18 @@ export default function StudioContent() {
       {/* 3. EDUCATION MODAL */}
       <AnimatePresence>
         {isEduModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-6 md:p-8 rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 my-8 shadow-2xl"
+              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-xl w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
             >
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
                 {editingEdu ? 'Edit Education' : 'Add Education'}
               </h3>
 
-              <form onSubmit={handleSaveEdu} className="space-y-4">
+              <form onSubmit={handleSaveEdu} className="space-y-4 overflow-y-auto pr-1 flex-1">
                 <div className="space-y-1.5">
                   <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
                     Degree / Program *
@@ -1511,7 +1738,7 @@ export default function StudioContent() {
                     value={eduForm.degree || ''}
                     onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })}
                     placeholder="e.g. Bachelor of Informatics"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1525,7 +1752,7 @@ export default function StudioContent() {
                     value={eduForm.school || ''}
                     onChange={(e) => setEduForm({ ...eduForm, school: e.target.value })}
                     placeholder="e.g. Universitas Jember"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1538,7 +1765,7 @@ export default function StudioContent() {
                     value={eduForm.period || ''}
                     onChange={(e) => setEduForm({ ...eduForm, period: e.target.value })}
                     placeholder="e.g. 2021 - 2026"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1565,7 +1792,7 @@ export default function StudioContent() {
                           setEduBulletInput('');
                         }
                       }}
-                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs"
+                      className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs cursor-pointer"
                     >
                       Add
                     </button>
@@ -1585,7 +1812,7 @@ export default function StudioContent() {
                               description: eduForm.description?.filter((_, i) => i !== idx),
                             })
                           }
-                          className="text-slate-400 hover:text-red-400"
+                          className="text-slate-400 hover:text-red-400 cursor-pointer"
                         >
                           ×
                         </button>
@@ -1594,17 +1821,17 @@ export default function StudioContent() {
                   </ul>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
                   <button
                     type="button"
                     onClick={() => setIsEduModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-center"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer shadow-md text-center"
                   >
                     Save
                   </button>
@@ -1618,16 +1845,18 @@ export default function StudioContent() {
       {/* 4. SKILL MODAL */}
       <AnimatePresence>
         {isSkillModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel p-6 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl"
+              className="glass-panel p-4 sm:p-6 md:p-8 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-800 my-4 sm:my-8 shadow-2xl max-h-[92vh] flex flex-col"
             >
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Add / Update Skill</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-4 sm:mb-6 shrink-0">
+                Add / Update Skill
+              </h3>
 
-              <form onSubmit={handleSaveSkill} className="space-y-4">
+              <form onSubmit={handleSaveSkill} className="space-y-4 overflow-y-auto pr-1 flex-1">
                 <div className="space-y-1.5">
                   <label className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase">
                     Skill Name *
@@ -1638,7 +1867,7 @@ export default function StudioContent() {
                     value={skillForm.name}
                     onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
                     placeholder="e.g. Next.js, Docker, Python"
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   />
                 </div>
 
@@ -1654,7 +1883,7 @@ export default function StudioContent() {
                         category: e.target.value as 'frontend' | 'backend' | 'tools',
                       })
                     }
-                    className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-sm focus:outline-none focus:border-neon-blue"
                   >
                     <option value="frontend">Frontend</option>
                     <option value="backend">Backend</option>
@@ -1683,17 +1912,17 @@ export default function StudioContent() {
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
                   <button
                     type="button"
                     onClick={() => setIsSkillModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-center"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-linear-to-r from-neon-blue to-neon-purple hover:brightness-110 cursor-pointer shadow-md text-center"
                   >
                     Save Skill
                   </button>
@@ -1707,15 +1936,15 @@ export default function StudioContent() {
       {/* 5. CUSTOM CONFIRMATION DIALOG (No native browser alert/confirm) */}
       <AnimatePresence>
         {confirmDialog.isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/50 dark:bg-slate-950/80 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="p-6 rounded-2xl max-w-md w-full bg-white/95 dark:bg-slate-950/90 border border-red-500/30 dark:border-red-500/20 shadow-2xl backdrop-blur-md relative overflow-hidden"
+              className="p-5 sm:p-6 rounded-2xl max-w-md w-full bg-white/95 dark:bg-slate-950/90 border border-red-500/30 dark:border-red-500/20 shadow-2xl backdrop-blur-md relative overflow-hidden"
             >
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 shrink-0">
+              <div className="flex items-start gap-3.5 sm:gap-4">
+                <div className="p-2.5 sm:p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 shrink-0">
                   <Trash2 className="w-5 h-5" />
                 </div>
                 <div className="space-y-1.5 flex-1">
@@ -1728,11 +1957,11 @@ export default function StudioContent() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2.5 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800/80">
                 <button
                   type="button"
                   onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
-                  className="px-4 py-2 rounded-xl text-xs font-mono font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all cursor-pointer text-center"
                 >
                   Batal
                 </button>
@@ -1742,7 +1971,7 @@ export default function StudioContent() {
                     confirmDialog.onConfirm();
                     setConfirmDialog({ ...confirmDialog, isOpen: false });
                   }}
-                  className="px-4 py-2 rounded-xl font-mono text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl font-mono text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all cursor-pointer text-center"
                 >
                   {confirmDialog.confirmLabel || 'Ya, Hapus'}
                 </button>

@@ -15,7 +15,7 @@ const categories = [
 
 export default function ProjectsContent() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const projects = usePortfolioStore((state) => state.projects);
+  const { projects, isLoading } = usePortfolioStore();
 
   const filteredProjects = activeCategory === 'all'
     ? projects
@@ -64,36 +64,57 @@ export default function ProjectsContent() {
         })}
       </div>
 
-      {/* Projects Card Grid */}
-      <motion.div 
-        layout
-        className="grid grid-cols-1 md:grid-cols-2 gap-8"
-      >
-        <AnimatePresence mode="popLayout">
-          {filteredProjects.map((project) => (
-            <motion.div
-              key={project.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+      {/* Projects Card Grid or Loading Skeleton */}
+      {isLoading && projects.length === 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {[1, 2, 3, 4].map((n) => (
+            <div
+              key={n}
+              className="glass-panel rounded-2xl overflow-hidden animate-pulse border border-slate-200 dark:border-slate-800 flex flex-col h-96"
             >
-              <ProjectCard project={project} />
-            </motion.div>
+              <div className="h-48 bg-slate-200 dark:bg-slate-900/80" />
+              <div className="p-6 space-y-4 flex-1">
+                <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
+                <div className="space-y-2">
+                  <div className="h-3 bg-slate-200 dark:bg-slate-800/60 rounded w-full" />
+                  <div className="h-3 bg-slate-200 dark:bg-slate-800/60 rounded w-4/5" />
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <div className="h-6 w-16 bg-slate-200 dark:bg-slate-800 rounded" />
+                  <div className="h-6 w-16 bg-slate-200 dark:bg-slate-800 rounded" />
+                </div>
+              </div>
+            </div>
           ))}
-        </AnimatePresence>
-      </motion.div>
+        </div>
+      ) : (
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project) => (
+              <motion.div
+                key={project.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+              >
+                <ProjectCard project={project} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      )}
 
       {/* Empty State */}
-      {filteredProjects.length === 0 && (
+      {!isLoading && filteredProjects.length === 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-16 text-center"
         >
-          <FolderGit2 className="w-12 h-12 text-slate-700 mb-3" />
-          <h3 className="text-white font-bold">No Projects Found</h3>
+          <FolderGit2 className="w-12 h-12 text-slate-400 dark:text-slate-700 mb-3" />
+          <h3 className="text-slate-900 dark:text-white font-bold">No Projects Found</h3>
           <p className="text-slate-500 text-sm mt-1">Check back later for more updates!</p>
         </motion.div>
       )}

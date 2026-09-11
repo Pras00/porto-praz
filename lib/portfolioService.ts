@@ -5,12 +5,19 @@ import {
   Experience,
   Education,
   Skill,
-  developerInfo as fallbackInfo,
-  projects as fallbackProjects,
-  experiences as fallbackExperiences,
-  educationList as fallbackEducation,
-  skills as fallbackSkills,
-} from '@/data/portfolioData';
+} from '@/types/portfolio';
+
+export const defaultProfile: DeveloperInfo = {
+  name: 'Prazz',
+  title: 'Creative Web Developer',
+  tagline: 'Crafting Modern Web Experiences',
+  subTagline: 'Building high-performance, visually stunning, and highly interactive interfaces using Next.js, TypeScript, and modern design principles.',
+  about: 'Informatics graduate with hands-on experience in front-end development through MSIB programs and software engineering projects. Proficient in building responsive web interfaces using HTML, CSS, JavaScript, React.js, Next.js, and Tailwind CSS. Experienced in translating design concepts into functional landing pages, collaborating with Digital Marketing teams, and applying basic SEO practices.',
+  email: 'prasetiawahyu22@gmail.com',
+  github: 'https://github.com/Pras00',
+  linkedin: 'https://www.linkedin.com/in/prasetia-wahyu-ramadhan-188919220/',
+  twitter: 'https://twitter.com',
+};
 
 export interface FullPortfolioData {
   developerInfo: DeveloperInfo;
@@ -24,11 +31,11 @@ export interface FullPortfolioData {
 export async function getFullPortfolioData(): Promise<FullPortfolioData> {
   if (!isSupabaseConfigured() || !supabase) {
     return {
-      developerInfo: fallbackInfo,
-      projects: fallbackProjects,
-      experiences: fallbackExperiences,
-      educationList: fallbackEducation,
-      skills: fallbackSkills,
+      developerInfo: defaultProfile,
+      projects: [],
+      experiences: [],
+      educationList: [],
+      skills: [],
     };
   }
 
@@ -44,17 +51,17 @@ export async function getFullPortfolioData(): Promise<FullPortfolioData> {
 
     const developerInfo: DeveloperInfo = profileRes.data
       ? {
-          name: profileRes.data.name || fallbackInfo.name,
-          title: profileRes.data.title || fallbackInfo.title,
-          tagline: profileRes.data.tagline || fallbackInfo.tagline,
-          subTagline: profileRes.data.sub_tagline || fallbackInfo.subTagline,
-          about: profileRes.data.about || fallbackInfo.about,
-          email: profileRes.data.email || fallbackInfo.email,
-          github: profileRes.data.github || fallbackInfo.github,
-          linkedin: profileRes.data.linkedin || fallbackInfo.linkedin,
-          twitter: profileRes.data.twitter || fallbackInfo.twitter,
+          name: profileRes.data.name || defaultProfile.name,
+          title: profileRes.data.title || defaultProfile.title,
+          tagline: profileRes.data.tagline || defaultProfile.tagline,
+          subTagline: profileRes.data.sub_tagline || defaultProfile.subTagline,
+          about: profileRes.data.about || defaultProfile.about,
+          email: profileRes.data.email || defaultProfile.email,
+          github: profileRes.data.github || defaultProfile.github,
+          linkedin: profileRes.data.linkedin || defaultProfile.linkedin,
+          twitter: profileRes.data.twitter || defaultProfile.twitter,
         }
-      : fallbackInfo;
+      : defaultProfile;
 
     const projects: Project[] =
       projectsRes.data && projectsRes.data.length > 0
@@ -70,7 +77,7 @@ export async function getFullPortfolioData(): Promise<FullPortfolioData> {
             githubUrl: p.github_url || '',
             featured: Boolean(p.featured),
           }))
-        : fallbackProjects;
+        : [];
 
     const experiences: Experience[] =
       experiencesRes.data && experiencesRes.data.length > 0
@@ -81,7 +88,7 @@ export async function getFullPortfolioData(): Promise<FullPortfolioData> {
             period: e.period,
             description: Array.isArray(e.description) ? e.description : [],
           }))
-        : fallbackExperiences;
+        : [];
 
     const educationList: Education[] =
       educationRes.data && educationRes.data.length > 0
@@ -92,7 +99,7 @@ export async function getFullPortfolioData(): Promise<FullPortfolioData> {
             period: ed.period,
             description: Array.isArray(ed.description) ? ed.description : [],
           }))
-        : fallbackEducation;
+        : [];
 
     const skills: Skill[] =
       skillsRes.data && skillsRes.data.length > 0
@@ -101,7 +108,7 @@ export async function getFullPortfolioData(): Promise<FullPortfolioData> {
             level: s.level,
             category: s.category,
           }))
-        : fallbackSkills;
+        : [];
 
     return {
       developerInfo,
@@ -113,11 +120,11 @@ export async function getFullPortfolioData(): Promise<FullPortfolioData> {
   } catch (err) {
     console.error('Error fetching data from Supabase, using fallback:', err);
     return {
-      developerInfo: fallbackInfo,
-      projects: fallbackProjects,
-      experiences: fallbackExperiences,
-      educationList: fallbackEducation,
-      skills: fallbackSkills,
+      developerInfo: defaultProfile,
+      projects: [],
+      experiences: [],
+      educationList: [],
+      skills: [],
     };
   }
 }

@@ -2,14 +2,15 @@ import type { Metadata } from 'next';
 import ContactContent from '@/components/ContactContent';
 
 export const metadata: Metadata = {
-  title: "Contact Alex Rivera | Professional Web Developer Collaboration",
-  description: "Send a message to Alex Rivera. Available for Web Development, Frontend Consulting, and Next.js collaborations. Get in touch via email, GitHub, or LinkedIn.",
+  title: "Contact Me | Prazz | Creative Web Developer",
+  description: "Send a message to Prazz (Prasetia Wahyu Ramadhan). Available for Web Development projects, Frontend engineering, and Next.js collaborations. Reach out via email, GitHub, or LinkedIn.",
   keywords: [
+    "Contact Prazz",
+    "Contact Prasetia Wahyu Ramadhan",
     "Contact Web Developer",
     "Hire Next.js Developer",
-    "Contact Frontend Engineer",
-    "Alex Rivera Contact Form",
-    "Hire React Developer"
+    "Hire Frontend Engineer",
+    "Prazz Contact Form",
   ],
 };
 
