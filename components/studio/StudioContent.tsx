@@ -1250,7 +1250,7 @@ export default function StudioContent() {
         {isProjectModalOpen && (
           <div
             onClick={() => setIsProjectModalOpen(false)}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -1611,7 +1611,7 @@ export default function StudioContent() {
         {isExpModalOpen && (
           <div
             onClick={() => setIsExpModalOpen(false)}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -1770,7 +1770,7 @@ export default function StudioContent() {
         {isEduModalOpen && (
           <div
             onClick={() => setIsEduModalOpen(false)}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -1917,7 +1917,7 @@ export default function StudioContent() {
         {isSkillModalOpen && (
           <div
             onClick={() => setIsSkillModalOpen(false)}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -2026,7 +2026,7 @@ export default function StudioContent() {
         {confirmDialog.isOpen && (
           <div
             onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 z-100 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
