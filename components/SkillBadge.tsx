@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Cpu, Layout, Settings } from 'lucide-react';
+import { Server, Layout, Settings } from 'lucide-react';
 
 interface SkillBadgeProps {
   name: string;
@@ -27,7 +27,7 @@ export default function SkillBadge({ name, category }: SkillBadgeProps) {
           border: 'border-purple-500/25 hover:border-purple-500/50',
           text: 'text-purple-600 dark:text-purple-400',
           glow: 'hover:shadow-[0_0_15px_rgba(139,92,246,0.35)]',
-          icon: Cpu,
+          icon: Server,
         };
       case 'tools':
       default:

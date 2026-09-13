@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
-import { ArrowRight, Code2, Sparkles } from 'lucide-react';
+import { ArrowRight, Code2 } from 'lucide-react';
 import { usePortfolioStore } from '@/store/usePortfolioStore';
 
 // Stagger variant configuration for entry animations
@@ -43,9 +43,12 @@ export default function Home() {
           {/* Accent Label */}
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neon-blue/10 border border-neon-blue/30 text-xs font-mono font-bold text-neon-blue-light tracking-wide uppercase mb-6 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tracking-wide uppercase mb-6 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
             <span>Available for Hire</span>
           </motion.div>
 

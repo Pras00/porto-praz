@@ -13,7 +13,7 @@ import {
   FolderGit2,
   Briefcase,
   GraduationCap,
-  Sparkles,
+  LayoutDashboard,
   Download,
   Upload,
   Plus,
@@ -809,7 +809,7 @@ export default function StudioContent() {
       {/* Navigation Tabs */}
       <div className="w-full flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-none">
         {[
-          { id: 'overview', label: 'Overview', icon: Sparkles },
+          { id: 'overview', label: 'Overview', icon: LayoutDashboard },
           { id: 'profile', label: 'Profile', icon: User },
           { id: 'projects', label: `Projects (${projects.length})`, icon: FolderGit2 },
           { id: 'experience', label: `Experience (${experiences.length})`, icon: Briefcase },
